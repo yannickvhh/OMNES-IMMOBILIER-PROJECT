@@ -1,0 +1,60 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
+}
+
+.header {
+  background: url('header-image.jpg') no-repeat center center;
+  background-size: cover;
+  height: 80vh;
+  position: relative;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 50, 0.6);
+  z-index: 1;
+}
+
+.description {
+  position: relative;
+  z-index: 2;
+}
+
+.logo {
+  max-width: 150px;
+}
+
+.navbar {
+  background-color: #003366 !important;
+}
+
+.navbar .nav-link {
+  color: white !important;
+  font-weight: 500;
+}
+
+.navbar .nav-link:hover {
+  color: #66b2ff !important;
+}
+
+.page-footer {
+  background-color: #002244;
+  color: white;
+}
+
+.page-footer h6 {
+  color: #66ccff;
+}
+
+footer p {
+  margin-bottom: 0;
+}
