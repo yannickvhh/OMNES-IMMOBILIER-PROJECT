@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rendez-vous | OMNES IMMOBILIER</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="style_commun.css">
+  <link rel="stylesheet" type="text/css" href="style_rendez_vous.css">
+</head>
+
+<body>
+  <div class="wrapper">
+    <header>
+      <div class="description">
+        <img src="logo.png" alt="Logo OMNES">
+        <h1>OMNES IMMOBILIER</h1>
+      </div>
+    </header>
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="main-navigation">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item"><a class="nav-link" href="homepage.html">Accueil</a></li>
+          <li class="nav-item"><a class="nav-link" href="tout_parcourir.html">Tout Parcourir</a></li>
+          <li class="nav-item"><a class="nav-link" href="recherche.html">Recherche</a></li>
+          <li class="nav-item"><a class="nav-link active" href="rendez-vous.html">Rendez-vous</a></li>
+          <li class="nav-item"><a class="nav-link" href="votre_compte.html">Votre Compte</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <section class="mt-5"> 
+      <h2 class="text-center">Prise de rendez-vous</h2>
+      <p class="text-center">Rencontrez nos agents immobiliers pour discuter de vos projets ou visiter un bien.</p>
+      
+      <!-- Onglets -->
+      <ul class="nav nav-tabs" id="appointmentTabs" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" id="new-appointment-tab" data-toggle="tab" href="#new-appointment" role="tab">Nouveau rendez-vous</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="my-appointments-tab" data-toggle="tab" href="#my-appointments" role="tab">Mes rendez-vous</a>
+        </li>
+      </ul>
+      
+      <!-- Contenu des onglets -->
+      <div class="tab-content" id="appointmentTabsContent">
+        <!-- Nouveau rendez-vous -->
+        <div class="tab-pane fade show active" id="new-appointment" role="tabpanel">
+          <!-- Liste des agents -->
+          <div class="agent-list">
+            <h3 class="text-center mb-4">Nos agents immobiliers</h3>
+            <div class="container">
+              <div class="row">
+                <!-- Agent 1 -->
+                <div class="col-md-4 mb-4">
+                  <div class="card agent-card">
+                    <img src="https://via.placeholder.com/300x200?text=Jean+Dupont" class="card-img-top" alt="Jean Dupont">
+                    <div class="card-body">
+                      <h5 class="card-title">Jean Dupont</h5>
+                      <p class="speciality">Spécialité: Immobilier résidentiel</p>
+                      <p class="card-text">Plus de 10 ans d'expérience dans l'immobilier résidentiel parisien.</p>
+                      <button class="btn btn-primary view-calendar" data-agent="1">Voir disponibilités</button>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Agent 2 -->
+                <div class="col-md-4 mb-4">
+                  <div class="card agent-card">
+                    <img src="https://via.placeholder.com/300x200?text=Marie+Martin" class="card-img-top" alt="Marie Martin">
+                    <div class="card-body">
+                      <h5 class="card-title">Marie Martin</h5>
+                      <p class="speciality">Spécialité: Immobilier commercial</p>
+                      <p class="card-text">Experte en locaux commerciaux et bureaux dans toute la France.</p>
+                      <button class="btn btn-primary view-calendar" data-agent="2">Voir disponibilités</button>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Agent 3 -->
+                <div class="col-md-4 mb-4">
+                  <div class="card agent-card">
+                    <img src="https://via.placeholder.com/300x200?text=Pierre+Durand" class="card-img-top" alt="Pierre Durand">
+                    <div class="card-body">
+                      <h5 class="card-title">Pierre Durand</h5>
+                      <p class="speciality">Spécialité: Terrains et propriétés rurales</p>
+                      <p class="card-text">Spécialiste des terrains constructibles et propriétés en zone rurale.</p>
+                      <button class="btn btn-primary view-calendar" data-agent="3">Voir disponibilités</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Calendrier (caché par défaut) -->
+          <div class="calendar-container" style="display: none;">
+            <div class="container">
+              <h4 class="text-center mb-3">Disponibilités de <span id="agent-name">Jean Dupont</span></h4>
+              <div class="calendar">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Heure</th>
+                      <th>Lundi</th>
+                      <th>Mardi</th>
+                      <th>Mercredi</th>
+                      <th>Jeudi</th>
+                      <th>Vendredi</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>9h00</td>
+                      <td class="available" data-time="9:00" data-day="1">Disponible</td>
+                      <td class="unavailable">Indisponible</td>
+                      <td class="available" data-time="9:00" data-day="3">Disponible</td>
+                      <td class="unavailable">Indisponible</td>
+                      <td class="available" data-time="9:00" data-day="5">Disponible</td>
+                    </tr>
+                    <tr>
+                      <td>10h00</td>
+                      <td class="unavailable">Indisponible</td>
+                      <td class="available" data-time="10:00" data-day="2">Disponible</td>
+                      <td class="available" data-time="10:00" data-day="3">Disponible</td>
+                      <td class="available" data-time="10:00" data-day="4">Disponible</td>
+                      <td class="unavailable">Indisponible</td>
+                    </tr>
+                    <tr>
+                      <td>11h00</td>
+                      <td class="available" data-time="11:00" data-day="1">Disponible</td>
+                      <td class="available" data-time="11:00" data-day="2">Disponible</td>
+                      <td class="unavailable">Indisponible</td>
+                      <td class="available" data-time="11:00" data-day="4">Disponible</td>
+                      <td class="available" data-time="11:00" data-day="5">Disponible</td>
+                    </tr>
+                    <tr>
+                      <td>14h00</td>
+                      <td class="available" data-time="14:00" data-day="1">Disponible</td>
+                      <td class="unavailable">Indisponible</td>
+                      <td class="available" data-time="14:00" data-day="3">Disponible</td>
+                      <td class="unavailable">Indisponible</td>
+                      <td class="available" data-time="14:00" data-day="5">Disponible</td>
+                    </tr>
+                    <tr>
+                      <td>15h00</td>
+                      <td class="unavailable">Indisponible</td>
+                      <td class="available" data-time="15:00" data-day="2">Disponible</td>
+                      <td class="available" data-time="15:00" data-day="3">Disponible</td>
+                      <td class="available" data-time="15:00" data-day="4">Disponible</td>
+                      <td class="unavailable">Indisponible</td>
+                    </tr>
+                    <tr>
+                      <td>16h00</td>
+                      <td class="available" data-time="16:00" data-day="1">Disponible</td>
+                      <td class="available" data-time="16:00" data-day="2">Disponible</td>
+                      <td class="unavailable">Indisponible</td>
+                      <td class="available" data-time="16:00" data-day="4">Disponible</td>
+                      <td class="available" data-time="16:00" data-day="5">Disponible</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              
+              <!-- Formulaire de rendez-vous (caché par défaut) -->
+              <div class="appointment-form" id="appointment-form" style="display: none;">
+                <h4 class="text-center mb-3">Confirmer votre rendez-vous</h4>
+                <form id="confirmAppointmentForm">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="appointment-date">Date et heure</label>
+                        <input type="text" class="form-control" id="appointment-date" readonly>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="appointment-agent">Agent</label>
+                        <input type="text" class="form-control" id="appointment-agent" readonly>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="appointment-name">Votre nom</label>
+                        <input type="text" class="form-control" id="appointment-name" required>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="appointment-email">Votre email</label>
+                        <input type="email" class="form-control" id="appointment-email" required>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="appointment-phone">Votre téléphone</label>
+                        <input type="tel" class="form-control" id="appointment-phone" required>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="appointment-type">Type de rendez-vous</label>
+                        <select class="form-control" id="appointment-type" required>
+                          <option value="">Sélectionnez</option>
+                          <option value="visite">Visite d'un bien</option>
+                          <option value="conseil">Conseil immobilier</option>
+                          <option value="estimation">Estimation de bien</option>
+                          <option value="autre">Autre</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="appointment-message">Message (optionnel)</label>
+                    <textarea class="form-control" id="appointment-message" rows="3"></textarea>
+                  </div>
+                  
+                  <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary px-5">Confirmer le rendez-vous</button>
+                    <button type="button" class="btn btn-secondary px-5 ml-2" id="cancel-appointment">Annuler</button>
+                  </div>
+                </form>
+              </div>
+              
+              <div class="text-center mt-3 mb-5">
+                <button class="btn btn-secondary" id="back-to-agents">Retour à la liste des agents</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Mes rendez-vous -->
+        <div class="tab-pane fade" id="my-appointments" role="tabpanel">
+          <div class="my-appointments">
+            <div class="container">
+              <h3 class="text-center mb-4">Vos rendez-vous à venir</h3>
+              
+              <!-- Message si aucun rendez-vous -->
+              <div id="no-appointments" class="text-center">
+                <p>Vous n'avez aucun rendez-vous programmé.</p>
+                <p>Consultez nos agents et prenez rendez-vous dès maintenant !</p>
+              </div>
+              
+              <!-- Liste des rendez-vous (cachée par défaut) -->
+              <div id="appointment-list" style="display: none;">
+                <div class="appointment-item">
+                  <div class="row">
+                    <div class="col-md-3">
+                      <strong>Date et heure:</strong><br>
+                      Lundi 2 juin 2025, 14h00
+                    </div>
+                    <div class="col-md-3">
+                      <strong>Agent:</strong><br>
+                      Jean Dupont
+                    </div>
+                    <div class="col-md-4">
+                      <strong>Type de rendez-vous:</strong><br>
+                      Visite d'un appartement à Paris 16ème
+                    </div>
+                    <div class="col-md-2 text-right">
+                      <span class="cancel-btn" data-appointment="1">Annuler</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="appointment-item">
+                  <div class="row">
+                    <div class="col-md-3">
+                      <strong>Date et heure:</strong><br>
+                      Mercredi 4 juin 2025, 10h00
+                    </div>
+                    <div class="col-md-3">
+                      <strong>Agent:</strong><br>
+                      Marie Martin
+                    </div>
+                    <div class="col-md-4">
+                      <strong>Type de rendez-vous:</strong><br>
+                      Conseil pour investissement locatif
+                    </div>
+                    <div class="col-md-2 text-right">
+                      <span class="cancel-btn" data-appointment="2">Annuler</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <h3 class="text-center mb-4 mt-5">Historique de vos rendez-vous</h3>
+              
+              <!-- Message si aucun historique -->
+              <div id="no-history" class="text-center">
+                <p>Vous n'avez aucun historique de rendez-vous.</p>
+              </div>
+              
+              <!-- Historique des rendez-vous (caché par défaut) -->
+              <div id="history-list" style="display: none;">
+                <div class="appointment-item">
+                  <div class="row">
+                    <div class="col-md-3">
+                      <strong>Date et heure:</strong><br>
+                      Lundi 12 mai 2025, 11h00
+                    </div>
+                    <div class="col-md-3">
+                      <strong>Agent:</strong><br>
+                      Pierre Durand
+                    </div>
+                    <div class="col-md-6">
+                      <strong>Type de rendez-vous:</strong><br>
+                      Estimation d'un terrain à Bordeaux
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="mt-5">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            <h6 class="text-uppercase font-weight-bold">Notre Éthique</h6>
+            <p>Tous nos collaborateurs sont disponibles sur les créneaux libres affichés dans leur planning. Prenez rendez-vous quand cela vous convient !</p>
+          </div>
+          <div class="col-md-4">
+            <h6 class="text-uppercase font-weight-bold">Contact</h6>
+            <p>37, quai de Grenelle, 75015 Paris, France<br>
+              info@omnesimmobilier.ece.fr<br>
+              +33 1 02 03 04 05<br>
+              +33 1 03 02 05 04</p>
+          </div>
+        </div>
+        <div class="mt-3 text-center">
+          <iframe src="https://www.google.com/maps?q=37+quai+de+Grenelle,+75015+Paris&output=embed" width="100%" height="300" style="border:0;" allowfullscreen=""></iframe>
+        </div>
+      </div>
+      <div class="text-center mt-3">&copy; 2025 OMNES IMMOBILIER | Tous droits réservés</div>
+    </footer>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      // Afficher le calendrier quand on clique sur "Voir disponibilités"
+      $('.view-calendar').click(function() {
+        var agentId = $(this).data('agent');
+        var agentName = $(this).closest('.card-body').find('.card-title').text();
+        
+        // Mettre à jour le nom de l'agent dans le calendrier
+        $('#agent-name').text(agentName);
+        
+        // Cacher la liste des agents et afficher le calendrier
+        $('.agent-list').hide();
+        $('.calendar-container').show();
+      });
+      
+      // Retour à la liste des agents
+      $('#back-to-agents').click(function() {
+        $('.calendar-container').hide();
+        $('.agent-list').show();
+        
+        // Réinitialiser le formulaire et les sélections
+        $('#appointment-form').hide();
+        $('.calendar .selected').removeClass('selected');
+      });
+      
+      // Sélectionner un créneau dans le calendrier
+      $('.calendar .available').click(function() {
+        // Enlever la classe selected de tous les créneaux
+        $('.calendar .selected').removeClass('selected');
+        
+        // Ajouter la classe selected au créneau cliqué
+        $(this).addClass('selected');
+        
+        // Récupérer les informations du créneau
+        var time = $(this).data('time');
+        var day = $(this).data('day');
+        var dayNames = ['', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'];
+        var date = dayNames[day] + ' prochain, ' + time;
+        
+        // Mettre à jour le formulaire
+        $('#appointment-date').val(date);
+        $('#appointment-agent').val($('#agent-name').text());
+        
+        // Afficher le formulaire
+        $('#appointment-form').show();
+      });
+      
+      // Annuler la sélection d'un créneau
+      $('#cancel-appointment').click(function(e) {
+        e.preventDefault();
+        
+        // Cacher le formulaire
+        $('#appointment-form').hide();
+        
+        // Enlever la sélection du créneau
+        $('.calendar .selected').removeClass('selected');
+      });
+      
+      // Soumettre le formulaire de rendez-vous
+      $('#confirmAppointmentForm').submit(function(e) {
+        e.preventDefault();
+        
+        // Simuler la confirmation du rendez-vous
+        alert('Votre rendez-vous a été confirmé ! Dans une version complète, un email de confirmation vous serait envoyé.');
+        
+        // Réinitialiser le formulaire et retourner à la liste des agents
+        $('#confirmAppointmentForm')[0].reset();
+        $('#appointment-form').hide();
+        $('.calendar-container').hide();
+        $('.agent-list').show();
+        
+        // Afficher les rendez-vous simulés dans l'onglet "Mes rendez-vous"
+        $('#no-appointments').hide();
+        $('#appointment-list').show();
+        $('#no-history').hide();
+        $('#history-list').show();
+      });
+      
+      // Annuler un rendez-vous
+      $('.cancel-btn').click(function() {
+        var appointmentId = $(this).data('appointment');
+        
+        // Simuler l'annulation
+        if (confirm('Êtes-vous sûr de vouloir annuler ce rendez-vous ?')) {
+          $(this).closest('.appointment-item').fadeOut(300, function() {
+            $(this).remove();
+            
+            // Si plus de rendez-vous, afficher le message
+            if ($('#appointment-list .appointment-item').length === 0) {
+              $('#appointment-list').hide();
+              $('#no-appointments').show();
+            }
+          });
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

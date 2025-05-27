@@ -1,0 +1,59 @@
+.category-nav {
+  background-color: #f5f5f5;
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 30px;
+}
+
+.category-nav .nav-pills .nav-link {
+  color: #8c84d6;
+  font-weight: bold;
+  margin: 0 5px;
+  border-radius: 20px;
+}
+
+.category-nav .nav-pills .nav-link.active {
+  background-color: #8c84d6;
+  color: white;
+}
+
+.property-card {
+  height: 100%;
+  border: 1px solid #ddd;
+  margin-bottom: 20px;
+}
+
+.property-card:hover {
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.property-card .card-img-top {
+  height: 200px;
+  object-fit: cover;
+}
+
+.property-card .card-title {
+  color: #8c84d6;
+  font-weight: bold;
+}
+
+.property-card .price {
+  color: #d4af37;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.property-details {
+  background-color: white;
+  border-radius: 5px;
+  padding: 20px;
+  margin-top: 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.property-gallery img {
+  width: 100%;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}

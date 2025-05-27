@@ -1,0 +1,85 @@
+
+.search-form {
+  background-color: #f5f5f5;
+  border-radius: 5px;
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.search-form label {
+  font-weight: bold;
+  color: #8c84d6;
+}
+
+.search-form .btn-primary {
+  background-color: #8c84d6;
+  border-color: #8c84d6;
+}
+
+.search-form .btn-primary:hover {
+  background-color: #d4af37;
+  border-color: #d4af37;
+}
+
+/* Résultats de recherche */
+.search-results {
+  margin-top: 30px;
+}
+
+.search-results h3 {
+  color: #d4af37;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.property-card {
+  height: 100%;
+  border: 1px solid #ddd;
+  margin-bottom: 20px;
+}
+
+.property-card:hover {
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.property-card .card-img-top {
+  height: 200px;
+  object-fit: cover;
+}
+
+.property-card .card-title {
+  color: #8c84d6;
+  font-weight: bold;
+}
+
+.property-card .price {
+  color: #d4af37;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+/* Filtres avancés */
+.advanced-filters {
+  display: none;
+  background-color: #f5f5f5;
+  padding: 15px;
+  margin-top: 15px;
+  border-radius: 5px;
+}
+
+.advanced-filters.show {
+  display: block;
+}
+
+.toggle-advanced {
+  color: #8c84d6;
+  cursor: pointer;
+  text-decoration: underline;
+  margin-top: 10px;
+  display: inline-block;
+}
+
+.toggle-advanced:hover {
+  color: #d4af37;
+}

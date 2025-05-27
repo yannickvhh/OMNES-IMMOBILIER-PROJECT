@@ -1,16 +1,18 @@
 body {
-  background-color: #124a83;
+  background-color: #a0c0e0;
   font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
 }
 
 .wrapper {
-  max-width: 1600px;
+  max-width: 1800px;
   margin: 0 auto;
   padding: 20px;
 }
 
 header {
-  background: url('header-image.jpg') center/cover no-repeat;
+  background: url('logo.png') center/cover no-repeat;
   height: 200px;
   display: flex;
   align-items: center;
@@ -20,7 +22,7 @@ header {
 }
 
 header .description {
-  background-color: rgba(0, 0, 50, 0.6);
+  background-color: rgba(140, 132, 214, 0.7);
   padding: 10px 20px;
   border-radius: 10px;
   display: flex;
@@ -32,18 +34,35 @@ header .description img {
   margin-right: 10px;
 }
 
+.navbar {
+  background-color: #8c84d6;
+}
+
 .navbar-nav .nav-link {
-  color: white;
+  color: #d4af37;
   margin: 0 10px;
+}
+
+.navbar-nav .nav-link:hover {
+  color: white;
+}
+
+.navbar-nav .nav-link.active {
+  color: white;
+  text-decoration: underline;
 }
 
 section {
   padding: 30px 0;
+  background-color: white;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.carousel-item img {
-  height: 600px;
-  object-fit: cover;
+section h2, section h3 {
+  color: #d4af37;
+  margin-bottom: 20px;
 }
 
 footer {
