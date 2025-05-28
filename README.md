@@ -32,20 +32,14 @@ Omnes Immobilier est une plateforme web dynamique dédiée à la gestion immobil
 
 ### Ressources
 - `logo.png` : Logo d'Omnes Immobilier
-- `propriete1.png`, `propriete2.png`, etc. : Images des propriétés immobilières
+- `propriete1.png`, `propriete2.png`, etc. : Images des propriétés immobilières provisoires
 
 ## Technologies utilisées
 - **Front-end** : HTML5, CSS3, JavaScript, Bootstrap
-- **Back-end** : PHP (non inclus dans ce dépôt)
-- **Base de données** : MySQL/MariaDB
+- **Back-end** : PHP (pas encore inclus dans ce dépôt)
+- **Base de données** : MySQL
 - **Services externes** : Google Maps (intégration de carte)
 
-## Installation et déploiement
-
-### Prérequis
-- Serveur web (Apache, Nginx)
-- PHP 7.4 ou supérieur
-- MySQL 5.7 ou supérieur
 
 ### Étapes d'installation
 1. Cloner ce dépôt sur votre serveur web
@@ -65,19 +59,6 @@ Omnes Immobilier est une plateforme web dynamique dédiée à la gestion immobil
    http://localhost/OMNES-IMMOBILIER-PROJECT/homepage.html
    ```
 
-## Structure de la base de données
-La base de données comprend plusieurs tables principales :
-- `Utilisateurs` : Informations sur tous les utilisateurs du système
-- `Clients` : Extension de la table Utilisateurs pour les clients
-- `Agents` : Extension de la table Utilisateurs pour les agents immobiliers
-- `Biens_Immobiliers` : Détails sur les propriétés disponibles
-- `Categories_Bien` : Catégories de biens immobiliers
-- `Images_Bien` : Liens vers les images des propriétés
-- `Rendez_Vous` : Gestion des rendez-vous entre clients et agents
-- `Disponibilites_Agent` : Créneaux disponibles des agents
-- `Paiements` : Transactions financières
-- `Messages` : Système de messagerie interne
-
 ## Fonctionnalités à implémenter
 - Authentification et gestion des sessions
 - Système de recherche avancée
@@ -85,8 +66,6 @@ La base de données comprend plusieurs tables principales :
 - Système de messagerie en temps réel
 - Passerelle de paiement sécurisée
 
-## Captures d'écran
-Les captures d'écran du site sont disponibles dans les fichiers propriete1.png, propriete2.png, etc.
 
 ## Contributeurs
 - [Yannick VHH](https://github.com/yannickvhh)
