@@ -90,12 +90,13 @@ Les captures d'écran du site sont disponibles dans les fichiers propriete1.png,
 
 ## Contributeurs
 - [Yannick VHH](https://github.com/yannickvhh)
+- [Silouane Chouteau](https://github.com/SilouaneChouteau)
 
 ## Licence
 Ce projet est développé dans le cadre d'un projet académique pour l'ECE Paris.
 
 ## Contact
 Pour toute question ou suggestion concernant ce projet, veuillez contacter :
-- Email : [votre-email@example.com]
+- Email : [leflutistedu78.lckl@gmail.com]
 
 
