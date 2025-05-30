@@ -1,243 +1,260 @@
--- Script SQL pour la création des bases de données Omnes Immobilier
--- Organisation par domaines fonctionnels pour plus de clarté
+-- Script SQL pour la création de la base de données Omnes Immobilier
+-- Ce script crée toutes les tables nécessaires pour le fonctionnement du site
 
--- --------------------------------------------------------
--- Base de données : omnes_utilisateurs
--- Contient les tables liées aux utilisateurs, authentification et profils
--- --------------------------------------------------------
+-- Suppression de la base de données si elle existe déjà
+DROP DATABASE IF EXISTS omnes_immobilier;
 
-CREATE DATABASE IF NOT EXISTS omnes_utilisateurs;
-USE omnes_utilisateurs;
+-- Création de la base de données
+CREATE DATABASE omnes_immobilier;
+USE omnes_immobilier;
 
--- Suppression des tables si elles existent déjà
-DROP TABLE IF EXISTS Messages;
-DROP TABLE IF EXISTS Disponibilites_Agent;
-DROP TABLE IF EXISTS Agents;
-DROP TABLE IF EXISTS Clients;
-DROP TABLE IF EXISTS Utilisateurs;
-
--- Table Utilisateurs (table de base pour tous les types d'utilisateurs)
-CREATE TABLE Utilisateurs (
+-- Table des utilisateurs (commune à tous les types d'utilisateurs)
+CREATE TABLE utilisateurs (
     id_utilisateur INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(100) NOT NULL UNIQUE,
     mot_de_passe VARCHAR(255) NOT NULL,
     nom VARCHAR(50) NOT NULL,
     prenom VARCHAR(50) NOT NULL,
     telephone VARCHAR(20),
-    role ENUM('admin', 'agent', 'client') NOT NULL,
-    date_creation DATETIME DEFAULT CURRENT_TIMESTAMP
+    type_utilisateur ENUM('client', 'agent', 'admin') NOT NULL,
+
 );
 
--- Table Clients (extension de Utilisateurs)
-CREATE TABLE Clients (
-    id_client INT PRIMARY KEY,
+-- Table des clients (informations spécifiques aux clients)
+CREATE TABLE clients (
+    id_client INT AUTO_INCREMENT PRIMARY KEY,
+    id_utilisateur INT NOT NULL,
     adresse_ligne1 VARCHAR(100),
     adresse_ligne2 VARCHAR(100),
     ville VARCHAR(50),
     code_postal VARCHAR(10),
     pays VARCHAR(50),
-    FOREIGN KEY (id_client) REFERENCES Utilisateurs(id_utilisateur) ON DELETE CASCADE
+    FOREIGN KEY (id_utilisateur) REFERENCES utilisateurs(id_utilisateur) ON DELETE CASCADE
 );
 
--- Table Agents (extension de Utilisateurs)
-CREATE TABLE Agents (
-    id_agent INT PRIMARY KEY,
+-- Table des informations de paiement des clients
+CREATE TABLE informations_paiement (
+    id_paiement INT AUTO_INCREMENT PRIMARY KEY,
+    id_client INT NOT NULL,
+    type_carte ENUM('Visa', 'MasterCard', 'American Express', 'PayPal'),
+    numero_carte VARCHAR(255),
+    nom_carte VARCHAR(100),
+    date_expiration VARCHAR(7),
+    code_securite VARCHAR(255),
+    FOREIGN KEY (id_client) REFERENCES clients(id_client) ON DELETE CASCADE
+);
+
+-- Table des agents immobiliers
+CREATE TABLE agents (
+    id_agent INT AUTO_INCREMENT PRIMARY KEY,
+    id_utilisateur INT NOT NULL,
     specialite VARCHAR(100),
-    cv VARCHAR(255),
     photo VARCHAR(255),
     video VARCHAR(255),
-    FOREIGN KEY (id_agent) REFERENCES Utilisateurs(id_utilisateur) ON DELETE CASCADE
+    cv TEXT,
+    actif BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (id_utilisateur) REFERENCES utilisateurs(id_utilisateur) ON DELETE CASCADE
 );
 
--- Table Disponibilites_Agent
-CREATE TABLE Disponibilites_Agent (
-    id_disponibilite INT AUTO_INCREMENT PRIMARY KEY,
-    id_agent INT,
-    jour DATE NOT NULL,
-    heure_debut TIME NOT NULL,
-    heure_fin TIME NOT NULL,
-    statut ENUM('disponible', 'occupe', 'conge') DEFAULT 'disponible',
-    FOREIGN KEY (id_agent) REFERENCES Agents(id_agent) ON DELETE CASCADE
-);
-
--- Table Messages
-CREATE TABLE Messages (
-    id_message INT AUTO_INCREMENT PRIMARY KEY,
-    id_expediteur INT,
-    id_destinataire INT,
-    contenu TEXT NOT NULL,
-    date_envoi DATETIME DEFAULT CURRENT_TIMESTAMP,
-    lu BOOLEAN DEFAULT FALSE,
-    type_message ENUM('texto', 'audio', 'video') DEFAULT 'texto',
-    FOREIGN KEY (id_expediteur) REFERENCES Utilisateurs(id_utilisateur) ON DELETE CASCADE,
-    FOREIGN KEY (id_destinataire) REFERENCES Utilisateurs(id_utilisateur) ON DELETE CASCADE
-);
-
--- Insertion d'un utilisateur administrateur de test
-INSERT INTO Utilisateurs (email, mot_de_passe, nom, prenom, telephone, role) VALUES
-('admin@omnesimmobilier.fr', '$2y$10$8MuRXOo0bIs4J.mQzZnIXe6fS5hEJLVvE/JbVH.qpHmxVUBCiIJHa', 'Admin', 'Omnes', '0123456789', 'admin');
--- Note: Le mot de passe hashé correspond à "admin123"
-
--- Insertion d'un agent immobilier de test
-INSERT INTO Utilisateurs (email, mot_de_passe, nom, prenom, telephone, role) VALUES
-('agent@omnesimmobilier.fr', '$2y$10$vKu8.aPfKBCVxLm/WmKkLO8eVm5UBJUmSSYDoYkIMN1oG9.4gfOSS', 'Dupont', 'Jean', '0123456788', 'agent');
--- Note: Le mot de passe hashé correspond à "agent123"
-
-INSERT INTO Agents (id_agent, specialite, cv, photo, video) VALUES
-(LAST_INSERT_ID(), 'Immobilier résidentiel', 'cv_jean_dupont.pdf', 'photos/jean_dupont.jpg', NULL);
-
--- Insertion d'un client de test
-INSERT INTO Utilisateurs (email, mot_de_passe, nom, prenom, telephone, role) VALUES
-('client@example.com', '$2y$10$QwU0frPRj.q7LzQO1AHNYOefrq9e1lFZVxMTF7I.cdOzKg36Uipba', 'Martin', 'Sophie', '0612345678', 'client');
--- Note: Le mot de passe hashé correspond à "client123"
-
-INSERT INTO Clients (id_client, adresse_ligne1, adresse_ligne2, ville, code_postal, pays) VALUES
-(LAST_INSERT_ID(), '15 rue des Fleurs', 'Apt 3', 'Paris', '75015', 'France');
-
--- Insertion de disponibilités pour l'agent
-INSERT INTO Disponibilites_Agent (id_agent, jour, heure_debut, heure_fin, statut) VALUES
-((SELECT id_agent FROM Agents LIMIT 1), CURDATE(), '09:00:00', '12:00:00', 'disponible'),
-((SELECT id_agent FROM Agents LIMIT 1), CURDATE(), '14:00:00', '18:00:00', 'disponible'),
-((SELECT id_agent FROM Agents LIMIT 1), DATE_ADD(CURDATE(), INTERVAL 1 DAY), '09:00:00', '12:00:00', 'disponible'),
-((SELECT id_agent FROM Agents LIMIT 1), DATE_ADD(CURDATE(), INTERVAL 1 DAY), '14:00:00', '18:00:00', 'disponible');
-
--- --------------------------------------------------------
--- Base de données : omnes_biens
--- Contient les tables liées aux biens immobiliers et leurs caractéristiques
--- --------------------------------------------------------
-
-CREATE DATABASE IF NOT EXISTS omnes_biens;
-USE omnes_biens;
-
--- Suppression des tables si elles existent déjà
-DROP TABLE IF EXISTS Images_Bien;
-DROP TABLE IF EXISTS Biens_Immobiliers;
-DROP TABLE IF EXISTS Categories_Bien;
-
--- Table Categories_Bien
-CREATE TABLE Categories_Bien (
+-- Table des catégories de biens immobiliers
+CREATE TABLE categories_bien (
     id_categorie INT AUTO_INCREMENT PRIMARY KEY,
-    nom_categorie VARCHAR(50) NOT NULL,
+    nom_categorie VARCHAR(100) NOT NULL,
     description TEXT
 );
 
--- Table Biens_Immobiliers
-CREATE TABLE Biens_Immobiliers (
+-- Table des biens immobiliers
+CREATE TABLE biens_immobiliers (
     id_bien INT AUTO_INCREMENT PRIMARY KEY,
-    id_categorie INT,
-    titre VARCHAR(100) NOT NULL,
+    id_categorie INT NOT NULL,
+    id_agent INT NOT NULL,
+    titre VARCHAR(255) NOT NULL,
     description TEXT,
-    prix DECIMAL(10, 2) NOT NULL,
-    surface DECIMAL(8, 2) NOT NULL,
+    prix DECIMAL(12, 2) NOT NULL,
     adresse VARCHAR(255) NOT NULL,
-    ville VARCHAR(50) NOT NULL,
+    ville VARCHAR(100) NOT NULL,
     code_postal VARCHAR(10) NOT NULL,
-    nombre_chambres INT,
-    nombre_salles_bain INT,
+    pays VARCHAR(50) DEFAULT 'France',
+    surface DECIMAL(8, 2),
+    nb_pieces INT,
+    nb_chambres INT,
     etage INT,
     balcon BOOLEAN DEFAULT FALSE,
     parking BOOLEAN DEFAULT FALSE,
-    date_publication DATETIME DEFAULT CURRENT_TIMESTAMP,
-    statut ENUM('disponible', 'vendu', 'loue') DEFAULT 'disponible',
-    type_vente ENUM('vente', 'location', 'enchere') DEFAULT 'vente',
-    date_fin_enchere DATETIME,
-    prix_depart_enchere DECIMAL(10, 2),
-    FOREIGN KEY (id_categorie) REFERENCES Categories_Bien(id_categorie)
+    disponible BOOLEAN DEFAULT TRUE,
+    en_vedette BOOLEAN DEFAULT FALSE,
+    date_creation DATETIME DEFAULT CURRENT_TIMESTAMP,
+    date_modification DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_categorie) REFERENCES categories_bien(id_categorie),
+    FOREIGN KEY (id_agent) REFERENCES agents(id_agent)
 );
 
--- Table Images_Bien
-CREATE TABLE Images_Bien (
+-- Table des enchères pour les biens en vente par enchère
+CREATE TABLE encheres (
+    id_enchere INT AUTO_INCREMENT PRIMARY KEY,
+    id_bien INT NOT NULL,
+    prix_depart DECIMAL(12, 2) NOT NULL,
+    date_debut DATETIME NOT NULL,
+    date_fin DATETIME NOT NULL,
+    conditions TEXT,
+    statut ENUM('en_attente', 'en_cours', 'terminee', 'annulee') DEFAULT 'en_attente',
+    FOREIGN KEY (id_bien) REFERENCES biens_immobiliers(id_bien) ON DELETE CASCADE
+);
+
+-- Table des offres d'enchères
+CREATE TABLE offres_enchere (
+    id_offre INT AUTO_INCREMENT PRIMARY KEY,
+    id_enchere INT NOT NULL,
+    id_client INT NOT NULL,
+    montant DECIMAL(12, 2) NOT NULL,
+    date_offre DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_enchere) REFERENCES encheres(id_enchere) ON DELETE CASCADE,
+    FOREIGN KEY (id_client) REFERENCES clients(id_client) ON DELETE CASCADE
+);
+
+-- Table des images des biens immobiliers
+CREATE TABLE images_bien (
     id_image INT AUTO_INCREMENT PRIMARY KEY,
-    id_bien INT,
-    chemin_image VARCHAR(255) NOT NULL,
-    est_principale BOOLEAN DEFAULT FALSE,
-    FOREIGN KEY (id_bien) REFERENCES Biens_Immobiliers(id_bien) ON DELETE CASCADE
+    id_bien INT NOT NULL,
+    url_image VARCHAR(255) NOT NULL,
+    ordre INT DEFAULT 0,
+    FOREIGN KEY (id_bien) REFERENCES biens_immobiliers(id_bien) ON DELETE CASCADE
 );
 
--- Insertion de données de test pour les catégories
-INSERT INTO Categories_Bien (nom_categorie, description) VALUES
+-- Table des disponibilités des agents
+CREATE TABLE disponibilites_agent (
+    id_disponibilite INT AUTO_INCREMENT PRIMARY KEY,
+    id_agent INT NOT NULL,
+    date_heure DATETIME NOT NULL,
+    duree INT DEFAULT 60, -- Durée en minutes
+    FOREIGN KEY (id_agent) REFERENCES agents(id_agent) ON DELETE CASCADE,
+    UNIQUE (id_agent, date_heure)
+);
+
+-- Table des rendez-vous
+CREATE TABLE rendez_vous (
+    id_rdv INT AUTO_INCREMENT PRIMARY KEY,
+    id_utilisateur INT NOT NULL,
+    id_agent INT NOT NULL,
+    id_bien INT,
+    date_heure DATETIME NOT NULL,
+    motif TEXT,
+    statut ENUM('confirme', 'annule', 'termine') DEFAULT 'confirme',
+    date_creation DATETIME DEFAULT CURRENT_TIMESTAMP,
+    date_modification DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_utilisateur) REFERENCES utilisateurs(id_utilisateur),
+    FOREIGN KEY (id_agent) REFERENCES agents(id_agent),
+    FOREIGN KEY (id_bien) REFERENCES biens_immobiliers(id_bien) ON DELETE SET NULL
+);
+
+-- Table des messages entre clients et agents
+CREATE TABLE messages (
+    id_message INT AUTO_INCREMENT PRIMARY KEY,
+    id_expediteur INT NOT NULL,
+    id_destinataire INT NOT NULL,
+    contenu TEXT NOT NULL,
+    date_envoi DATETIME DEFAULT CURRENT_TIMESTAMP,
+    lu BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (id_expediteur) REFERENCES utilisateurs(id_utilisateur),
+    FOREIGN KEY (id_destinataire) REFERENCES utilisateurs(id_utilisateur)
+);
+
+-- Table des événements hebdomadaires
+CREATE TABLE evenements (
+    id_evenement INT AUTO_INCREMENT PRIMARY KEY,
+    titre VARCHAR(255) NOT NULL,
+    description TEXT,
+    date_debut DATETIME NOT NULL,
+    date_fin DATETIME NOT NULL,
+    lieu VARCHAR(255),
+    image VARCHAR(255)
+);
+
+-- Insertion des données de base
+
+-- Insertion des catégories de biens
+INSERT INTO categories_bien (nom_categorie, description) VALUES
 ('Immobilier résidentiel', 'Toute propriété utilisée à des fins résidentielles. Les exemples incluent les maisons unifamiliales, les condos, les coopératives, les duplex, les maisons en rangée et les résidences multifamiliales.'),
 ('Immobilier commercial', 'Toute propriété utilisée exclusivement à des fins commerciales, comme les complexes d''appartements, les stations-service, les épiceries, les hôpitaux, les hôtels, les bureaux, les parkings, les restaurants, les centres commerciaux, les magasins et les théâtres.'),
 ('Terrain', 'Comprend les propriétés non développées, les terrains vacants et les terres agricoles telles que les fermes, les vergers, les ranchs et les terres à bois.'),
-('Appartement à louer', 'Propriétés disponibles à la location pour une durée limitée.'),
-('Immobiliers en vente par enchère', 'Propriétés vendues aux enchères avec un prix de départ et une date de fin d''enchère.');
+('Appartement à louer', 'C''est prendre une propriété en location pour une durée limitée.'),
+('Immobilier en vente par enchère', 'C''est une vente publique où le bien immobilier est proposé à un prix de départ et les acheteurs potentiels font des offres successives. Le bien est attribué au plus offrant.');
 
--- Insertion de quelques biens immobiliers de test
-INSERT INTO Biens_Immobiliers (id_categorie, titre, description, prix, surface, adresse, ville, code_postal, nombre_chambres, nombre_salles_bain, etage, balcon, parking, statut, type_vente) VALUES
-(1, 'Appartement moderne', 'Magnifique appartement lumineux avec vue dégagée', 450000.00, 85.00, '123 Avenue Victor Hugo', 'Paris', '75016', 3, 2, 4, TRUE, TRUE, 'disponible', 'vente'),
-(1, 'Maison familiale', 'Grande maison avec jardin dans quartier calme', 580000.00, 120.00, '45 Rue des Cerisiers', 'Lyon', '69003', 4, 2, 0, FALSE, TRUE, 'disponible', 'vente'),
-(2, 'Local commercial', 'Local commercial en centre-ville', 320000.00, 95.00, '78 Rue de la République', 'Marseille', '13001', NULL, 1, 0, FALSE, FALSE, 'disponible', 'vente'),
-(3, 'Terrain constructible', 'Beau terrain plat avec vue dégagée', 180000.00, 800.00, 'Route des Vignes', 'Bordeaux', '33000', NULL, NULL, NULL, FALSE, FALSE, 'disponible', 'vente'),
-(4, 'Studio meublé', 'Studio entièrement rénové et meublé', 850.00, 28.00, '12 Rue Saint-Michel', 'Paris', '75005', 1, 1, 3, FALSE, FALSE, 'disponible', 'location');
+-- Insertion d'un administrateur par défaut
+INSERT INTO utilisateurs (email, mot_de_passe, nom, prenom, telephone, type_utilisateur) VALUES
+('admin@omnesimmobilier.fr', 'admin123', 'Admin', 'Omnes', '01 23 45 67 89', 'admin');
 
--- Insertion d'images pour les biens
-INSERT INTO Images_Bien (id_bien, chemin_image, est_principale) VALUES
-(1, 'images/biens/appartement1_main.jpg', TRUE),
-(1, 'images/biens/appartement1_salon.jpg', FALSE),
-(1, 'images/biens/appartement1_cuisine.jpg', FALSE),
-(2, 'images/biens/maison1_main.jpg', TRUE),
-(2, 'images/biens/maison1_jardin.jpg', FALSE),
-(3, 'images/biens/local1_main.jpg', TRUE),
-(4, 'images/biens/terrain1_main.jpg', TRUE),
-(5, 'images/biens/studio1_main.jpg', TRUE);
+-- Insertion d'un agent immobilier par défaut
+INSERT INTO utilisateurs (email, mot_de_passe, nom, prenom, telephone, type_utilisateur) VALUES
+('jean-pierre.segado@omnesimmobilier.fr', 'agent123', 'Segado', 'Jean-Pierre', '01 23 45 67 90', 'agent');
 
--- --------------------------------------------------------
--- Base de données : omnes_services
--- Contient les tables liées aux rendez-vous et paiements
--- --------------------------------------------------------
+INSERT INTO agents (id_utilisateur, specialite, photo, cv) VALUES
+(2, 'Immobilier résidentiel', 'RESSOURCES/IMAGES/agents/agent1.png', 'Jean-Pierre SEGADO est un agent immobilier expérimenté spécialisé dans l''immobilier résidentiel. Avec plus de 10 ans d''expérience dans le secteur, il a aidé de nombreuses familles à trouver leur maison idéale.');
 
-CREATE DATABASE IF NOT EXISTS omnes_services;
-USE omnes_services;
+-- Insertion d'un client par défaut
+INSERT INTO utilisateurs (email, mot_de_passe, nom, prenom, telephone, type_utilisateur) VALUES
+('client@exemple.fr', 'client123', 'Dupont', 'Marie', '06 12 34 56 78', 'client');
 
--- Suppression des tables si elles existent déjà
-DROP TABLE IF EXISTS Cartes_Paiement;
-DROP TABLE IF EXISTS Paiements;
-DROP TABLE IF EXISTS Rendez_Vous;
+INSERT INTO clients (id_utilisateur, adresse_ligne1, ville, code_postal, pays) VALUES
+(3, '123 Rue de Paris', 'Paris', '75015', 'France');
 
--- Table Rendez_Vous
-CREATE TABLE Rendez_Vous (
-    id_rdv INT AUTO_INCREMENT PRIMARY KEY,
-    id_client INT,
-    id_agent INT,
-    id_bien INT,
-    date_heure DATETIME NOT NULL,
-    duree INT NOT NULL, -- en minutes
-    statut ENUM('confirme', 'annule', 'termine') DEFAULT 'confirme',
-    type_rdv ENUM('en_personne', 'videoconference', 'telephone') DEFAULT 'en_personne',
-    notes TEXT
-);
+-- Insertion de quelques biens immobiliers
+INSERT INTO biens_immobiliers (id_categorie, id_agent, titre, description, prix, adresse, ville, code_postal, surface, nb_pieces, nb_chambres, etage, balcon, parking, en_vedette) VALUES
+(1, 1, 'Appartement lumineux à Paris', 'Bel appartement de 3 pièces avec vue dégagée, proche des commerces et transports.', 450000.00, '15 Rue de la Paix', 'Paris', '75002', 75.50, 3, 2, 3, TRUE, FALSE, TRUE),
+(1, 1, 'Maison familiale à Bordeaux', 'Grande maison de 5 chambres avec jardin et piscine, idéale pour une famille.', 850000.00, '25 Avenue des Pins', 'Bordeaux', '33000', 180.00, 7, 5, 0, FALSE, TRUE, TRUE),
+(2, 1, 'Local commercial en centre-ville', 'Local commercial de 120m² en plein centre-ville, forte affluence.', 350000.00, '8 Place du Marché', 'Lyon', '69002', 120.00, 2, 0, 0, FALSE, FALSE, FALSE),
+(3, 1, 'Terrain constructible de 1000m²', 'Beau terrain plat et viabilisé, idéal pour construction de maison individuelle.', 180000.00, 'Route des Collines', 'Aix-en-Provence', '13100', 1000.00, 0, 0, 0, FALSE, FALSE, TRUE),
+(4, 1, 'Studio meublé pour étudiant', 'Studio entièrement meublé et équipé, proche des universités.', 550.00, '3 Rue des Étudiants', 'Toulouse', '31000', 25.00, 1, 0, 2, TRUE, FALSE, FALSE),
+(5, 1, 'Villa de luxe - Vente aux enchères', 'Magnifique villa avec vue mer, piscine à débordement et jardin tropical.', 1200000.00, '18 Chemin des Criques', 'Nice', '06000', 250.00, 8, 5, 0, TRUE, TRUE, TRUE);
 
--- Table Paiements
-CREATE TABLE Paiements (
-    id_paiement INT AUTO_INCREMENT PRIMARY KEY,
-    id_client INT,
-    id_bien INT,
-    id_rdv INT,
-    montant DECIMAL(10, 2) NOT NULL,
-    date_paiement DATETIME DEFAULT CURRENT_TIMESTAMP,
-    type_service VARCHAR(50) NOT NULL,
-    statut ENUM('approuve', 'refuse', 'en_attente') DEFAULT 'en_attente'
-);
+-- Insertion des images pour les biens
+INSERT INTO images_bien (id_bien, url_image, ordre) VALUES
+(1, 'RESSOURCES/IMAGES/biens/appartement_paris_1.jpg', 1),
+(1, 'RESSOURCES/IMAGES/biens/appartement_paris_2.jpg', 2),
+(2, 'RESSOURCES/IMAGES/biens/maison_bordeaux_1.jpg', 1),
+(2, 'RESSOURCES/IMAGES/biens/maison_bordeaux_2.jpg', 2),
+(3, 'RESSOURCES/IMAGES/biens/local_lyon_1.jpg', 1),
+(4, 'RESSOURCES/IMAGES/biens/terrain_aix_1.jpg', 1),
+(5, 'RESSOURCES/IMAGES/biens/studio_toulouse_1.jpg', 1),
+(6, 'RESSOURCES/IMAGES/biens/villa_nice_1.jpg', 1),
+(6, 'RESSOURCES/IMAGES/biens/villa_nice_2.jpg', 2);
 
--- Table Cartes_Paiement
-CREATE TABLE Cartes_Paiement (
-    id_carte INT AUTO_INCREMENT PRIMARY KEY,
-    id_client INT,
-    type_carte ENUM('visa', 'mastercard', 'amex', 'paypal') NOT NULL,
-    nom_carte VARCHAR(100) NOT NULL,
-    numero_carte VARCHAR(255) NOT NULL, -- Crypté
-    date_expiration VARCHAR(7) NOT NULL, -- Format MM/YYYY
-    code_securite VARCHAR(255) NOT NULL -- Crypté
-);
+-- Insertion d'une enchère
+INSERT INTO encheres (id_bien, prix_depart, date_debut, date_fin, conditions, statut) VALUES
+(6, 1200000.00, '2025-06-01 10:00:00', '2025-06-15 18:00:00', 'La vente est ferme et définitive : aucun droit de rétractation. Le bien est vendu en l''état, sans garantie de vice caché.', 'en_cours');
 
--- Insertion d'un rendez-vous de test
-INSERT INTO Rendez_Vous (id_client, id_agent, id_bien, date_heure, duree, statut, type_rdv, notes) VALUES
-(3, 2, 1, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 2 DAY), 60, 'confirme', 'en_personne', 'Première visite pour découvrir le bien');
+-- Insertion d'un événement hebdomadaire
+INSERT INTO evenements (titre, description, date_debut, date_fin, lieu, image) VALUES
+('Journée portes ouvertes', 'Ce samedi : journée portes ouvertes à notre agence avec visite guidée de 5 propriétés phares, et un séminaire sur l''investissement locatif à 15h.', '2025-06-05 10:00:00', '2025-06-05 18:00:00', 'Agence Omnes Immobilier, 37 quai de Grenelle, 75015 Paris', 'RESSOURCES/IMAGES/evenements/portes_ouvertes.jpg');
 
--- Insertion d'un paiement de test
-INSERT INTO Paiements (id_client, id_bien, id_rdv, montant, type_service, statut) VALUES
-(3, 1, 1, 50.00, 'Frais de dossier', 'approuve');
+-- Insertion des disponibilités pour l'agent Jean-Pierre
+-- Lundi
+INSERT INTO disponibilites_agent (id_agent, date_heure, duree) VALUES
+(1, '2025-06-02 14:00:00', 60),
+(1, '2025-06-02 15:00:00', 60),
+(1, '2025-06-02 16:00:00', 60),
+(1, '2025-06-02 17:00:00', 60);
 
--- Insertion d'une carte de paiement de test (avec des données fictives)
-INSERT INTO Cartes_Paiement (id_client, type_carte, nom_carte, numero_carte, date_expiration, code_securite) VALUES
-(3, 'visa', 'Sophie Martin', 'ENCRYPTED_4532XXXXXXXX1234', '12/2025', 'ENCRYPTED_123');
+-- Mercredi
+INSERT INTO disponibilites_agent (id_agent, date_heure, duree) VALUES
+(1, '2025-06-04 09:00:00', 60),
+(1, '2025-06-04 10:00:00', 60),
+(1, '2025-06-04 11:00:00', 60),
+(1, '2025-06-04 14:00:00', 60),
+(1, '2025-06-04 15:00:00', 60),
+(1, '2025-06-04 16:00:00', 60),
+(1, '2025-06-04 17:00:00', 60);
+
+-- Vendredi
+INSERT INTO disponibilites_agent (id_agent, date_heure, duree) VALUES
+(1, '2025-06-06 09:00:00', 60),
+(1, '2025-06-06 10:00:00', 60),
+(1, '2025-06-06 11:00:00', 60),
+(1, '2025-06-06 14:00:00', 60),
+(1, '2025-06-06 15:00:00', 60),
+(1, '2025-06-06 16:00:00', 60),
+(1, '2025-06-06 17:00:00', 60);
+
+-- Insertion d'un rendez-vous déjà pris
+INSERT INTO rendez_vous (id_utilisateur, id_agent, id_bien, date_heure, motif) VALUES
+(3, 1, 1, '2025-06-04 10:00:00', 'Visite de l''appartement à Paris');
