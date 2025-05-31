@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accueil | OMNES IMMOBILIER</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container header-content">
+            <div class="logo-container">
+                <img src="assets/images/logo.png" alt="Logo OMNES IMMOBILIER">
+                <h1>OMNES IMMOBILIER</h1>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container navbar-container">
+            <div class="hamburger">
+                <i class="fas fa-bars"></i>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="index.html" class="nav-link active">Accueil</a></li>
+                <li class="nav-item"><a href="tout-parcourir.html" class="nav-link">Tout Parcourir</a></li>
+                <li class="nav-item"><a href="recherche.html" class="nav-link">Recherche</a></li>
+                <li class="nav-item"><a href="rendez-vous.html" class="nav-link">Rendez-vous</a></li>
+                <li class="nav-item"><a href="votre-compte.html" class="nav-link">Votre Compte</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <h2>Trouvez votre bien immobilier idéal</h2>
+            <p>Nous vous accompagnons dans tous vos projets immobiliers : achat, vente, location, estimation, et plus encore.</p>
+            <a href="tout-parcourir.html" class="btn btn-primary btn-lg">Découvrir nos biens</a>
+        </div>
+        <img src="assets/images/propriete1.png" alt="Propriété de luxe" class="hero-image">
+    </section>
+
+    <!-- Événement Section -->
+    <section class="section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Événement de la semaine</h2>
+            </div>
+            <div style="background-color: var(--light); padding: var(--spacing-lg); border-radius: var(--border-radius-md); border-left: 5px solid var(--accent); box-shadow: var(--shadow-sm);">
+                <h3 class="text-center mb-3">Journée portes ouvertes</h3>
+                <p class="text-center">Ce samedi : journée portes ouvertes à notre agence avec visite guidée de 5 propriétés phares, et un séminaire sur l'investissement locatif à 15h.</p>
+                <div class="text-center mt-4">
+                    <a href="rendez-vous.html" class="btn btn-secondary">Réserver votre place</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Propriétés en vedette -->
+    <section class="section" style="background-color: #f8f9fa;">
+        <div class="container">
+            <div class="section-title">
+                <h2>Nos biens en vedette</h2>
+            </div>
+            
+            <!-- Carousel -->
+            <div class="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item">
+                        <img src="assets/images/propriete1.png" alt="Propriété 1">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="assets/images/propriete2.png" alt="Propriété 2">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="assets/images/propriete3.png" alt="Propriété 3">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="assets/images/propriete4.png" alt="Propriété 4">
+                    </div>
+                </div>
+                <div class="carousel-control carousel-control-prev">
+                    <i class="fas fa-chevron-left"></i>
+                </div>
+                <div class="carousel-control carousel-control-next">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <a href="tout-parcourir.html" class="btn btn-primary">Voir tous nos biens</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Nos services</h2>
+            </div>
+            <div class="properties-grid">
+                <div class="property-card">
+                    <div class="property-content">
+                        <h3><i class="fas fa-home"></i> Achat & Vente</h3>
+                        <p>Trouvez le bien de vos rêves ou vendez votre propriété au meilleur prix grâce à notre expertise du marché immobilier.</p>
+                    </div>
+                </div>
+                <div class="property-card">
+                    <div class="property-content">
+                        <h3><i class="fas fa-key"></i> Location</h3>
+                        <p>Découvrez notre sélection de biens à louer ou confiez-nous la gestion locative de votre propriété.</p>
+                    </div>
+                </div>
+                <div class="property-card">
+                    <div class="property-content">
+                        <h3><i class="fas fa-chart-line"></i> Estimation</h3>
+                        <p>Bénéficiez d'une estimation précise de votre bien immobilier réalisée par nos experts.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h6>Notre Éthique</h6>
+                    <p>Tous nos collaborateurs sont disponibles sur les créneaux libres affichés dans leur planning. Prenez rendez-vous quand cela vous convient !</p>
+                </div>
+                <div class="footer-column">
+                    <h6>Liens Rapides</h6>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Accueil</a></li>
+                        <li><a href="tout-parcourir.html">Tout Parcourir</a></li>
+                        <li><a href="recherche.html">Recherche</a></li>
+                        <li><a href="rendez-vous.html">Rendez-vous</a></li>
+                        <li><a href="votre-compte.html">Votre Compte</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h6>Contact</h6>
+                    <p>37, quai de Grenelle, 75015 Paris, France<br>
+                    info@omnesimmobilier.ece.fr<br>
+                    +33 1 02 03 04 05<br>
+                    +33 1 03 02 05 04</p>
+                </div>
+            </div>
+            
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps?q=37+quai+de+Grenelle,+75015+Paris&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 OMNES IMMOBILIER | Tous droits réservés</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

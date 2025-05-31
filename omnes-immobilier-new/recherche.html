@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recherche | OMNES IMMOBILIER</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container header-content">
+            <div class="logo-container">
+                <img src="assets/images/logo.png" alt="Logo OMNES IMMOBILIER">
+                <h1>OMNES IMMOBILIER</h1>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container navbar-container">
+            <div class="hamburger">
+                <i class="fas fa-bars"></i>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="index.html" class="nav-link">Accueil</a></li>
+                <li class="nav-item"><a href="tout-parcourir.html" class="nav-link">Tout Parcourir</a></li>
+                <li class="nav-item"><a href="recherche.html" class="nav-link active">Recherche</a></li>
+                <li class="nav-item"><a href="rendez-vous.html" class="nav-link">Rendez-vous</a></li>
+                <li class="nav-item"><a href="votre-compte.html" class="nav-link">Votre Compte</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Page Title -->
+    <section class="section" style="padding-top: var(--spacing-lg); padding-bottom: var(--spacing-lg);">
+        <div class="container">
+            <div class="section-title">
+                <h2>Recherche avancée</h2>
+                <p>Trouvez le bien immobilier qui correspond exactement à vos critères</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Formulaire de recherche -->
+    <section class="section" style="background-color: #f8f9fa;">
+        <div class="container">
+            <div style="background-color: white; padding: var(--spacing-xl); border-radius: var(--border-radius-md); box-shadow: var(--shadow-md);">
+                <form>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--spacing-lg);">
+                        <!-- Type de transaction -->
+                        <div class="form-group">
+                            <label class="form-label">Type de transaction</label>
+                            <div style="display: flex; gap: var(--spacing-md);">
+                                <div style="flex: 1;">
+                                    <input type="radio" id="achat" name="transaction" value="achat" checked>
+                                    <label for="achat" style="margin-left: var(--spacing-xs);">Achat</label>
+                                </div>
+                                <div style="flex: 1;">
+                                    <input type="radio" id="location" name="transaction" value="location">
+                                    <label for="location" style="margin-left: var(--spacing-xs);">Location</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Type de bien -->
+                        <div class="form-group">
+                            <label class="form-label">Type de bien</label>
+                            <select class="form-control">
+                                <option value="">Tous les types</option>
+                                <option value="appartement">Appartement</option>
+                                <option value="maison">Maison</option>
+                                <option value="villa">Villa</option>
+                                <option value="terrain">Terrain</option>
+                                <option value="commerce">Commerce</option>
+                                <option value="bureau">Bureau</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Localisation -->
+                        <div class="form-group">
+                            <label class="form-label">Localisation</label>
+                            <input type="text" class="form-control" placeholder="Ville, code postal, quartier...">
+                        </div>
+                        
+                        <!-- Budget -->
+                        <div class="form-group">
+                            <label class="form-label">Budget maximum</label>
+                            <input type="number" class="form-control" placeholder="€">
+                        </div>
+                        
+                        <!-- Surface -->
+                        <div class="form-group">
+                            <label class="form-label">Surface minimum (m²)</label>
+                            <input type="number" class="form-control" placeholder="m²">
+                        </div>
+                        
+                        <!-- Chambres -->
+                        <div class="form-group">
+                            <label class="form-label">Nombre de chambres</label>
+                            <select class="form-control">
+                                <option value="">Indifférent</option>
+                                <option value="1">1+</option>
+                                <option value="2">2+</option>
+                                <option value="3">3+</option>
+                                <option value="4">4+</option>
+                                <option value="5">5+</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Options supplémentaires -->
+                    <div class="form-group mt-4">
+                        <label class="form-label">Options supplémentaires</label>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--spacing-md);">
+                            <div>
+                                <input type="checkbox" id="parking" name="options" value="parking">
+                                <label for="parking" style="margin-left: var(--spacing-xs);">Parking</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" id="balcon" name="options" value="balcon">
+                                <label for="balcon" style="margin-left: var(--spacing-xs);">Balcon/Terrasse</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" id="ascenseur" name="options" value="ascenseur">
+                                <label for="ascenseur" style="margin-left: var(--spacing-xs);">Ascenseur</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" id="piscine" name="options" value="piscine">
+                                <label for="piscine" style="margin-left: var(--spacing-xs);">Piscine</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" id="jardin" name="options" value="jardin">
+                                <label for="jardin" style="margin-left: var(--spacing-xs);">Jardin</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" id="meuble" name="options" value="meuble">
+                                <label for="meuble" style="margin-left: var(--spacing-xs);">Meublé</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Bouton de recherche -->
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-search"></i> Rechercher
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Résultats de recherche -->
+    <section class="section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Résultats correspondants</h2>
+            </div>
+            
+            <div class="properties-grid">
+                <!-- Propriété 1 -->
+                <div class="property-card">
+                    <img src="assets/images/propriete1.png" alt="Appartement Paris 15" class="property-image">
+                    <div class="property-content">
+                        <h3 class="property-title">Appartement de luxe à Paris 15</h3>
+                        <p class="property-price">750 000 €</p>
+                        <div class="property-details">
+                            <span><i class="fas fa-ruler-combined"></i> 120 m²</span>
+                            <span><i class="fas fa-bed"></i> 3 chambres</span>
+                            <span><i class="fas fa-bath"></i> 2 salles de bain</span>
+                        </div>
+                        <p>Magnifique appartement rénové avec vue sur la Tour Eiffel, cuisine équipée et parquet en chêne.</p>
+                        <div class="property-footer">
+                            <a href="#" class="btn btn-secondary">Détails</a>
+                            <a href="rendez-vous.html" class="btn btn-primary">Prendre RDV</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Propriété 2 -->
+                <div class="property-card">
+                    <img src="assets/images/propriete3.png" alt="Studio Paris 6" class="property-image">
+                    <div class="property-content">
+                        <h3 class="property-title">Studio au cœur de Saint-Germain</h3>
+                        <p class="property-price">450 000 €</p>
+                        <div class="property-details">
+                            <span><i class="fas fa-ruler-combined"></i> 35 m²</span>
+                            <span><i class="fas fa-bed"></i> 1 chambre</span>
+                            <span><i class="fas fa-bath"></i> 1 salle de bain</span>
+                        </div>
+                        <p>Charmant studio entièrement rénové dans un immeuble haussmannien, idéal pour investissement locatif.</p>
+                        <div class="property-footer">
+                            <a href="#" class="btn btn-secondary">Détails</a>
+                            <a href="rendez-vous.html" class="btn btn-primary">Prendre RDV</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h6>Notre Éthique</h6>
+                    <p>Tous nos collaborateurs sont disponibles sur les créneaux libres affichés dans leur planning. Prenez rendez-vous quand cela vous convient !</p>
+                </div>
+                <div class="footer-column">
+                    <h6>Liens Rapides</h6>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Accueil</a></li>
+                        <li><a href="tout-parcourir.html">Tout Parcourir</a></li>
+                        <li><a href="recherche.html">Recherche</a></li>
+                        <li><a href="rendez-vous.html">Rendez-vous</a></li>
+                        <li><a href="votre-compte.html">Votre Compte</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h6>Contact</h6>
+                    <p>37, quai de Grenelle, 75015 Paris, France<br>
+                    info@omnesimmobilier.ece.fr<br>
+                    +33 1 02 03 04 05<br>
+                    +33 1 03 02 05 04</p>
+                </div>
+            </div>
+            
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps?q=37+quai+de+Grenelle,+75015+Paris&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 OMNES IMMOBILIER | Tous droits réservés</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
