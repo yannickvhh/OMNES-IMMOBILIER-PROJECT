@@ -1,0 +1,567 @@
+/* General Body & Typography */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8f9fa; /* Light grey background */
+    color: #333;
+    line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #2c3e50; /* Dark blue-grey for headings */
+}
+
+/* Chat Page Specific Styles */
+.chat-container { /* You might need a wrapper div for the chat page content */
+    max-width: 1100px;
+    margin: 2rem auto;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+/* Contact List Styling */
+#contact-list .list-group-item {
+    border: none;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 15px 20px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+#contact-list .list-group-item:last-child {
+    border-bottom: none;
+}
+
+#contact-list .list-group-item:hover,
+#contact-list .list-group-item.active {
+    background-color: #e9ecef; /* Light grey for hover/active */
+    color: #007bff; /* Bootstrap primary blue */
+}
+
+.contact-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: #007bff; /* Bootstrap primary blue */
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    font-size: 1.1rem;
+    margin-right: 15px;
+}
+
+.contact-info .contact-name {
+    font-weight: 500;
+    color: #343a40; /* Darker grey for name */
+    margin-bottom: 2px;
+}
+
+.contact-info .last-message-preview {
+    font-size: 0.85rem;
+    color: #6c757d; /* Muted text color */
+}
+
+.unread-badge {
+    font-size: 0.75rem;
+    padding: .3em .6em;
+}
+
+/* Chat Area Styling */
+.chat-messages {
+    padding: 20px;
+    background-color: #f4f7f9; /* Slightly different background for chat messages area */
+    display: flex;
+    flex-direction: column-reverse; /* To keep messages at the bottom and scroll appearing at top */
+    overflow-y: auto;
+}
+
+.message-bubble-wrapper {
+    display: flex;
+    margin-bottom: 15px;
+    max-width: 75%;
+    align-items: flex-end; /* Align avatar and bubble */
+}
+
+.message-bubble {
+    padding: 10px 15px;
+    border-radius: 18px;
+    position: relative; /* For timestamp or potential tail */
+}
+
+.message-bubble p.message-text {
+    margin-bottom: 3px;
+    font-size: 0.95rem;
+    word-wrap: break-word;
+}
+
+.message-bubble small.message-time {
+    font-size: 0.7rem;
+    color: #888;
+    display: block;
+    text-align: right;
+}
+
+/* Sent messages */
+.message-bubble-wrapper.sent {
+    margin-left: auto; /* Align to the right */
+    flex-direction: row-reverse; /* Avatar on the right if you add one */
+}
+
+.message-bubble-wrapper.sent .message-bubble {
+    background-color: #007bff; /* Bootstrap primary blue */
+    color: white;
+    border-top-right-radius: 5px; /* Different corner for "tail" effect */
+}
+.message-bubble-wrapper.sent .message-bubble small.message-time {
+    color: #e0e0e0;
+}
+
+/* Received messages */
+.message-bubble-wrapper.received {
+    margin-right: auto; /* Align to the left */
+}
+
+.message-bubble-wrapper.received .message-bubble {
+    background-color: #e9ecef; /* Light grey, similar to active contact */
+    color: #333;
+    border-top-left-radius: 5px; /* Different corner */
+}
+
+/* Chat Input Area */
+.chat-input-area {
+    padding: 15px 20px;
+    background-color: #fff;
+    border-top: 1px solid #e0e0e0;
+}
+
+.message-input-field {
+    border-radius: 20px;
+    padding: 10px 15px;
+    resize: none;
+    min-height: 40px; /* Start height */
+    max-height: 120px; /* Max height before scroll */
+    overflow-y: auto; /* Scroll if content exceeds max-height */
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    border: 1px solid #ced4da;
+}
+.message-input-field:focus {
+    border-color: #86b7fe;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25);
+}
+
+.send-message-button {
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10px;
+}
+.send-message-button i {
+    font-size: 1.1rem;
+}
+
+/* General Card Styling (can be used across pages) */
+.card {
+    border: none; /* Remove default bootstrap border if using box-shadow primarily */
+}
+.card-header {
+    background-color: #f8f9fa; /* Consistent light header for cards */
+    border-bottom: 1px solid #e0e0e0;
+    font-weight: 500;
+}
+
+/* Style for property cards (e.g. on tout-parcourir or recherche) */
+.property-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+.property-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+.property-card .card-img-top {
+    border-bottom: 1px solid #eee;
+}
+.property-card .price-tag {
+    font-weight: bold;
+    color: #007bff; /* Primary color for price */
+}
+.property-card .type-tag {
+    font-size: 0.85em;
+    padding: 0.2em 0.5em;
+    background-color: #6c757d; /* Muted background */
+    color: white;
+    border-radius: 3px;
+    display: inline-block;
+    margin-bottom: 0.5rem;
+}
+.description-truncate {
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Number of lines to show */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 4.5em; /* Approximation: 3 lines * 1.5em line-height */
+}
+
+/* Agent cards (similar to property cards) */
+.agent-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+.agent-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+/* Hero Section Styling (for index.php or other landing pages) */
+.hero-section {
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../assets/images/hero_banner_placeholder.jpg') no-repeat center center/cover;
+    /* Ensure you have a hero_banner_placeholder.jpg in assets/images or update path */
+    padding: 100px 0;
+    color: white;
+    text-align: center;
+}
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: white; /* Override default h1 color for this section */
+}
+.hero-subtitle {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    font-family: 'Poppins', sans-serif; /* Use Poppins for subtitle */
+    color: #e0e0e0;
+}
+
+/* General Section Styling */
+.section {
+    padding: 60px 0;
+}
+.section-title {
+    margin-bottom: 40px;
+    text-align: center;
+}
+.section-title h2 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+.section-title p {
+    font-size: 1.1rem;
+    color: #6c757d;
+}
+
+/* Button styles */
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+.btn-secondary:hover {
+    background-color: #545b62;
+    border-color: #545b62;
+}
+
+/* Header and Navbar specific styling */
+.header {
+    background-color: #343a40; /* Dark background for top header */
+    padding: 10px 0;
+    color: white;
+}
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+.logo-container img {
+    height: 50px; /* Adjust as needed */
+    margin-right: 15px;
+}
+.logo-container h1 {
+    font-size: 1.8rem;
+    margin: 0;
+    color: white; /* Override default h1 color */
+    font-family: 'Playfair Display', serif;
+}
+.user-info {
+    font-size: 0.9rem;
+}
+
+.navbar {
+    /* Bootstrap default styling for navbar is good, but can customize further if needed */
+    border-bottom: 1px solid #dee2e6;
+}
+.navbar .nav-link.active {
+    font-weight: 600;
+    color: #007bff !important;
+}
+
+/* Footer styling (if you have one) */
+.footer {
+    background-color: #343a40;
+    color: #f8f9fa;
+    padding: 40px 0;
+    text-align: center;
+}
+.footer p {
+    margin-bottom: 0;
+}
+.footer .social-icons a {
+    color: #f8f9fa;
+    margin: 0 10px;
+    font-size: 1.5rem;
+    transition: color 0.2s;
+}
+.footer .social-icons a:hover {
+    color: #007bff;
+}
+
+/* Form styling for login/register (votre-compte.php) */
+#connexion .card, #inscription .card {
+    border: none;
+}
+#connexion .card-title, #inscription .card-title {
+    font-weight: 600;
+}
+
+/* Specific styling for seed_users.php (this is a utility script, so minimal styling) */
+/* No specific complex styling usually needed for seed_users.php as it's a backend script.
+   The inline styles already in seed_users.php for success/error messages are fine
+   for its purpose and don't need to be moved to the global CSS.
+   If you want a more styled version for some reason, you can add classes to seed_users.php
+   and define them here. */
+
+/* Responsive Adjustments (examples) */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    .hero-subtitle {
+        font-size: 1.2rem;
+    }
+    .section-title h2 {
+        font-size: 2rem;
+    }
+    .chat-container {
+        margin: 1rem;
+    }
+    .logo-container h1 {
+        font-size: 1.5rem;
+    }
+    .header-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    .user-info {
+        margin-top: 10px;
+    }
+}
+
+/* Utility classes */
+.bg-dark-transparent {
+    background-color: rgba(0,0,0,0.5); /* For carousel captions, etc. */
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* Custom image styles for tout-parcourir.php */
+.category-card-img {
+    height: 200px;
+    object-fit: cover;
+}
+
+.property-card-img-featured {
+    height: 220px;
+    object-fit: cover;
+}
+
+/* Custom image styles for recherche.php */
+.agent-card-img {
+    height: 250px;
+    object-fit: cover;
+}
+
+.property-card-img-search {
+    height: 220px;
+    object-fit: cover;
+}
+
+/* Custom styles for propriete_details.php */
+.property-main-img {
+    max-height: 500px;
+    object-fit: cover;
+}
+
+.auction-offers-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.agent-details-photo {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+
+.map-container {
+    height: 300px;
+}
+
+.map-iframe {
+    border: 0;
+}
+
+/* Custom styles for chat.php */
+.chat-contact-list-scroll {
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.chat-messages-area-dimensions {
+    height: 500px;
+    /* Other properties like padding, flex are in .chat-messages */
+}
+
+/* Custom styles for admin/manage_users.php */
+.actions-column-width {
+    min-width: 300px;
+}
+
+/* --- Styles for tout-parcourir.php --- */
+
+/* Category Cards Enhancements */
+.category-card {
+    background-color: #fff; /* Ensure white background */
+    border-radius: 0.5rem; /* Softer corners */
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12); /* Consistent hover effect */
+}
+
+.category-card .card-img-top {
+    border-top-left-radius: 0.5rem; /* Match card border radius */
+    border-top-right-radius: 0.5rem;
+    /* height: 200px; object-fit: cover; are in .category-card-img class */
+}
+
+.category-card .card-body {
+    padding: 1.5rem; /* Increase padding for better spacing */
+    /* text-center is on the parent .category-card div in HTML */
+}
+
+.category-card .icon-wrapper { /* New wrapper for icon */
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background-color: #2c3e50; /* Dark blue-grey background for icon wrapper */
+    color: #fff; /* White icon color */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.25rem auto; /* Center the icon wrapper, increased bottom margin */
+}
+.category-card .icon-wrapper i {
+    font-size: 2rem; /* Adjust icon size within the circle */
+    color: #fff; /* Ensure icon itself is white */
+}
+
+.category-card .card-title {
+    margin-bottom: 0.75rem;
+    font-size: 1.25rem; /* Slightly larger title */
+    min-height: 2.5em; /* Approx 2 lines for title, helps with alignment */
+}
+
+.category-card .card-text {
+    font-size: 0.9rem;
+    color: #6c757d; /* Muted text for description */
+    min-height: 4.5em; /* Approx 3 lines for description, helps with alignment */
+    margin-bottom: 1rem;
+}
+
+.category-card .btn {
+    background-color: #2c3e50; /* Dark blue-grey button */
+    border-color: #2c3e50;
+    color: #fff; /* White text */
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+}
+.category-card .btn:hover {
+    background-color: #1a252f; /* Darker shade on hover */
+    border-color: #1a252f;
+    color: #fff;
+}
+
+/* Ensure .property-card (used for featured properties) also has a white background and rounded corners for consistency if not overridden */
+.properties-grid .property-card {
+    background-color: #fff;
+    border-radius: 0.5rem;
+     /* transition and hover are already in the global .property-card style */
+}
+
+.properties-grid .property-card .card-img-top {
+    border-top-left-radius: 0.5rem; /* Match card border radius */
+    border-top-right-radius: 0.5rem;
+    /* height: 220px; object-fit: cover; are in .property-card-img-featured class */
+}
+
+.properties-grid .property-card .card-body {
+    padding: 1.25rem; /* Standardized padding */
+}
+
+.properties-grid .property-card .card-title {
+    font-size: 1.15rem; /* Adjust title size */
+    margin-bottom: 0.5rem;
+    min-height: 2.3em; /* Approx 2 lines for title consistency */
+}
+.properties-grid .property-card .card-subtitle { /* class is card-subtitle mb-2 text-muted */
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem !important; 
+}
+
+.properties-grid .property-card .type-tag { /* class is card-text type-tag */
+    margin-bottom: 0.75rem; /* More space after type tag */
+}
+.properties-grid .property-card .description-truncate { /* class is card-text flex-grow-1 description-truncate */
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    /* min-height: 4.05em; /* Approx 3 lines for 0.9rem font with 1.5 line-height. Global one is 4.5em, already good */
+}
+
+.properties-grid .property-card .price-tag { /* class is card-text price-tag fs-5 text-primary fw-bold */
+    margin-bottom: 0.75rem;
+    color: #2c3e50 !important; /* Dark blue-grey for price, added !important to override Bootstrap if needed */
+}
+
+.properties-grid .property-card .btn-primary {
+    background-color: #2c3e50; /* Dark blue-grey button */
+    border-color: #2c3e50;
+    color: #fff; /* White text */
+}
+.properties-grid .property-card .btn-primary:hover {
+    background-color: #1a252f; /* Darker shade on hover */
+    border-color: #1a252f;
+    color: #fff;
+}
