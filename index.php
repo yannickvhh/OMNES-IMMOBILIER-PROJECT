@@ -3,7 +3,7 @@ $page_title = "Accueil | OMNES IMMOBILIER";
 require_once 'php/includes/header.php'; 
 ?>
 
-    <!-- Hero Section -->
+  
     <section class="hero-section">
         <div class="container text-center">
             <h1 class="hero-title">Bienvenue chez OMNES IMMOBILIER</h1>
@@ -22,7 +22,6 @@ require_once 'php/includes/header.php';
                 <div class="row">
                     <div class="col-md-6 event-image-container">
                         <img src="assets/images/event_placeholder.jpg" alt="Événement OMNES IMMOBILIER" class="img-fluid rounded">
-                        <!-- Replace with actual event image -->
                     </div>
                     <div class="col-md-6 event-details">
                         <h3>Portes Ouvertes : Découvrez nos Nouveautés</h3>
@@ -36,7 +35,7 @@ require_once 'php/includes/header.php';
         </div>
     </section>
 
-    <!-- Carrousel des propriétés (Optional) -->
+    
     <section class="section properties-carousel-section bg-light">
         <div class="container">
             <div class="section-title">
@@ -83,7 +82,7 @@ require_once 'php/includes/header.php';
         </div>
     </section>
 
-    <!-- Introduction OMNES IMMOBILIER -->
+   
     <section class="section about-us-short">
         <div class="container">
             <div class="row align-items-center">
@@ -94,7 +93,6 @@ require_once 'php/includes/header.php';
                 </div>
                 <div class="col-md-6 text-center">
                     <img src="assets/images/team_placeholder.jpg" alt="Équipe Omnes Immobilier" class="img-fluid rounded shadow">
-                    <!-- Replace with actual team or agency image -->
                 </div>
             </div>
         </div>
