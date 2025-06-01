@@ -1,29 +1,25 @@
 <?php
 session_start();
-require_once '../config/db.php'; // Provides $pdo
+require_once '../config/db.php';
 
-// Initialize variables to store form data and error messages
 $nom = $prenom = $email = $telephone = $password = $confirm_password = "";
-$type_compte = "client"; // Default to client registration
+$type_compte = "client";
 $errors = [];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // Validate Nom
     if (empty(trim($_POST["nom"]))) {
         $errors['nom'] = "Veuillez entrer votre nom.";
     } else {
         $nom = trim($_POST["nom"]);
     }
 
-    // Validate Prénom
     if (empty(trim($_POST["prenom"]))) {
         $errors['prenom'] = "Veuillez entrer votre prénom.";
     } else {
         $prenom = trim($_POST["prenom"]);
     }
 
-    // Validate Email
     if (empty(trim($_POST["email"]))) {
         $errors['email'] = "Veuillez entrer votre email.";
     } else {
@@ -50,14 +46,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    // Validate Téléphone (optional, but if provided, validate)
     if (!empty(trim($_POST["telephone"]))) {
         $telephone = trim($_POST["telephone"]);
     } else {
         $telephone = null;
     }
 
-    // Validate Mot de passe
     if (empty(trim($_POST["password"]))) {
         $errors['password'] = "Veuillez entrer un mot de passe.";
     } elseif (strlen(trim($_POST["password"])) < 6) {
@@ -66,7 +60,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $password = trim($_POST["password"]);
     }
 
-    // Validate Confirmer le mot de passe
     if (empty(trim($_POST["confirm_password"]))) {
         $errors['confirm_password'] = "Veuillez confirmer le mot de passe.";
     } else {
@@ -76,15 +69,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    // Validate Conditions générales
     if (empty($_POST["conditions"])) {
         $errors['conditions'] = "Vous devez accepter les conditions générales.";
     }
 
-    // If no errors, proceed to insert into database
     if (empty($errors)) {
         if (!isset($pdo)) {
-            // This check is somewhat redundant if already done for email check, but good for robustness
             $errors['database'] = "Erreur critique: La connexion à la base de données n'a pas pu être établie avant l'inscription.";
         } else {
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
@@ -92,7 +82,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             try {
                 $pdo->beginTransaction();
 
-                // Insert into Utilisateurs table
                 $sql_user = "INSERT INTO Utilisateurs (nom, prenom, email, mot_de_passe, type_compte) VALUES (:nom, :prenom, :email, :mot_de_passe, :type_compte)";
                 $stmt_user = $pdo->prepare($sql_user);
                 $stmt_user->bindParam(':nom', $nom, PDO::PARAM_STR);
@@ -106,7 +95,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
                 $id_utilisateur = $pdo->lastInsertId();
 
-                // If user is a client, insert into Clients table
                 if ($type_compte === 'client') {
                     $sql_client = "INSERT INTO Clients (id_utilisateur, telephone) VALUES (:id_utilisateur, :telephone)";
                     $stmt_client = $pdo->prepare($sql_client);
@@ -132,7 +120,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    // If there were errors, store them in session and redirect back to registration form
     if (!empty($errors)) {
         $_SESSION['registration_errors'] = $errors;
         $_SESSION['registration_input'] = $_POST;
