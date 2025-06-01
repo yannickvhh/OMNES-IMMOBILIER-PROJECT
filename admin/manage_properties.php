@@ -1,17 +1,14 @@
 <?php
-$path_prefix = '../'; // Prefix for assets and nav links from admin folder
+$path_prefix = '../';
 $page_title = "Gérer les Propriétés | Admin OMNES IMMOBILIER";
 require_once '../php/includes/header.php';
-// Ensure db.php now provides a PDO connection object, typically named $pdo
-require_once '../php/config/db.php'; 
+require_once '../php/config/db.php';
 
-// Security: Check if user is admin
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || $_SESSION["user_type"] !== 'admin') {
     header("location: " . $path_prefix . "votre-compte.php");
     exit;
 }
 
-// Define property options arrays early so they are available in POST handling
 $property_types_options = [
     'residentiel' => 'Immobilier Résidentiel',
     'commercial' => 'Immobilier Commercial',
@@ -28,11 +25,10 @@ $property_status_options = [
     'retire' => 'Retiré'
 ];
 
-// Initialize variables for form and messages
 $properties = [];
-$agents = []; // For assigning an agent to a property
+$agents = [];
 $form_data = [
-    'id' => null, // For edit mode
+    'id' => null,
     'titre' => '', 'description' => '', 'type_propriete' => 'residentiel', 'adresse' => '',
     'ville' => '', 'code_postal' => '', 'prix' => '', 'nombre_pieces' => '', 'nombre_chambres' => '',
     'surface' => '', 'etage' => '', 'balcon' => 0, 'parking' => 0, 'id_agent_responsable' => '',
@@ -40,11 +36,10 @@ $form_data = [
     'prix_depart_enchere' => '', 'date_heure_debut_enchere' => '', 'date_heure_fin_enchere' => ''
 ];
 $edit_mode = false;
-$edit_property_id = null; // Will hold the ID of the property being edited
+$edit_property_id = null;
 $success_message = '';
 $error_message = '';
 
-// Fetch agents for the dropdown
 try {
     $sql_agents = "SELECT u.id, CONCAT(u.prenom, ' ', u.nom) as agent_name 
                    FROM Utilisateurs u 
@@ -58,10 +53,7 @@ try {
     error_log("PDO Error fetching agents: " . $e->getMessage());
 }
 
-
-// Handle Add/Edit Property POST request
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Sanitize and retrieve form data
     $form_data['titre'] = trim($_POST['titre']);
     $form_data['description'] = trim($_POST['description']);
     $form_data['type_propriete'] = $_POST['type_propriete'];
@@ -77,7 +69,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $form_data['parking'] = isset($_POST['parking']) ? 1 : 0;
     $form_data['id_agent_responsable'] = !empty($_POST['id_agent_responsable']) ? (int)$_POST['id_agent_responsable'] : null;
     
-    // Auction fields from POST
     $form_data['prix_depart_enchere'] = !empty($_POST['prix_depart_enchere']) ? (float)$_POST['prix_depart_enchere'] : null;
     $form_data['date_heure_debut_enchere'] = !empty($_POST['date_heure_debut_enchere']) ? $_POST['date_heure_debut_enchere'] : null;
     $form_data['date_heure_fin_enchere'] = !empty($_POST['date_heure_fin_enchere']) ? $_POST['date_heure_fin_enchere'] : null;
@@ -91,11 +82,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    // Handle file upload
     if (isset($_FILES['photo_principale']) && $_FILES['photo_principale']['error'] == 0) {
         $target_dir = "../assets/properties/";
         if (!is_dir($target_dir)) {
-            mkdir($target_dir, 0777, true); // Ensure directory exists
+            mkdir($target_dir, 0777, true);
         }
         $photo_filename = time() . '_' . basename($_FILES["photo_principale"]["name"]);
         $target_file = $target_dir . $photo_filename;
@@ -107,7 +97,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } elseif (!empty($_POST['existing_photo_filename'])){
         $form_data['photo_principale_filename'] = $_POST['existing_photo_filename'];
     } else {
-        // If no new photo and no existing photo, set to null or handle as needed
         $form_data['photo_principale_filename'] = null;
     }
 
@@ -118,7 +107,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $error_message = "Le titre, l'adresse et la ville sont obligatoires.";
     }
 
-    // Validate auction fields if status is 'enchere_active'
     if ($form_data['statut'] === 'enchere_active') {
         if (empty($form_data['prix_depart_enchere']) || $form_data['prix_depart_enchere'] <= 0) {
             $error_message .= "<br>Le prix de départ de l'enchère est obligatoire et doit être positif.";
@@ -140,14 +128,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (empty($error_message)) {
         try {
-            $pdo->beginTransaction(); // Start transaction
+            $pdo->beginTransaction();
 
-            $current_property_id = null; // To store ID of property being processed
+            $current_property_id = null;
 
             if ($edit_property_id) {
-                // Update existing property
                 $current_property_id = $edit_property_id;
-                // The SQL for Proprietes update is already here, it does NOT include auction-specific fields from Proprietes table itself
                 $sql_prop = "UPDATE Proprietes SET 
                             titre = :titre, description = :description, type_propriete = :type_propriete, 
                             adresse = :adresse, ville = :ville, code_postal = :code_postal, prix = :prix, 
@@ -171,8 +157,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 ];
                 $stmt_prop->execute($params_prop);
             } else {
-                // Add new property
-                // SQL for Proprietes insert is here, also does not include auction-specific fields from Proprietes table
                 $sql_prop = "INSERT INTO Proprietes (titre, description, type_propriete, adresse, ville, code_postal, 
                             prix, nombre_pieces, nombre_chambres, surface, etage, balcon, parking, 
                             photo_principale_filename, video_url, statut, id_agent_responsable, date_ajout) 
@@ -193,10 +177,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     ':id_agent_responsable' => $form_data['id_agent_responsable']
                 ];
                 $stmt_prop->execute($params_prop);
-                $current_property_id = $pdo->lastInsertId(); // Get ID of new property
+                $current_property_id = $pdo->lastInsertId();
             }
 
-            // If status is 'enchere_active', manage Encheres table
             if ($form_data['statut'] === 'enchere_active' && $current_property_id) {
                 $sql_check_enchere = "SELECT id FROM Encheres WHERE id_propriete = :id_propriete";
                 $stmt_check = $pdo->prepare($sql_check_enchere);
@@ -211,72 +194,52 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 ];
 
                 if ($existing_enchere_id) {
-                    // Update existing auction
                     $sql_enchere = "UPDATE Encheres SET prix_depart = :prix_depart, date_heure_debut = :date_heure_debut, date_heure_fin = :date_heure_fin WHERE id = :id";
                     $params_enchere[':id'] = $existing_enchere_id;
                 } else {
-                    // Insert new auction
                     $sql_enchere = "INSERT INTO Encheres (id_propriete, prix_depart, date_heure_debut, date_heure_fin) VALUES (:id_propriete, :prix_depart, :date_heure_debut, :date_heure_fin)";
                 }
                 $stmt_enchere = $pdo->prepare($sql_enchere);
                 $stmt_enchere->execute($params_enchere);
             } else if ($current_property_id) {
-                // If status is NOT 'enchere_active', consider removing existing auction if any. Or leave it.
-                // For now, we'll just ensure no active auction is set if status is not 'enchere_active'.
-                // Optionally: DELETE FROM Encheres WHERE id_propriete = :current_property_id;
-                // This might be too destructive if an admin temporarily changes status.
-                // A better approach would be to rely on propriete_details.php checking both property.statut AND auction dates.
+                
             }
 
-            $pdo->commit(); // Commit transaction
+            $pdo->commit();
 
             $success_message = $edit_property_id ? "Propriété et détails d'enchère (si applicable) mis à jour avec succès !" : "Propriété et détails d'enchère (si applicable) ajoutés avec succès !";
             
             if(!$edit_property_id) {
-                 $form_data = array_fill_keys(array_keys($form_data), ''); // Reset form
+                 $form_data = array_fill_keys(array_keys($form_data), '');
                  $form_data['type_propriete'] = 'residentiel'; $form_data['statut'] = 'disponible'; 
                  $form_data['balcon'] = 0; $form_data['parking'] = 0; $form_data['id'] = null;
             } else {
-                // If editing, reload the form_data to show updated values, or redirect
-                // For simplicity, we can just keep $edit_mode = true and the form will repopulate
-                // from $form_data which now contains the POSTed values.
-                // To be absolutely sure it shows DB state, one might re-fetch:
-                // $form_data = $stmt_get_property->fetch(); // (if $stmt_get_property was defined and executed)
+                
             }
 
         } catch (PDOException $e) {
             $error_message = "Erreur lors de l'opération : " . $e->getMessage();
-            error_log("PDO Error on property save: " . $e->getMessage() . " SQL: " . $sql . " Params: " . json_encode($params));
+            error_log("PDO Error on property save: " . $e->getMessage() . " SQL: " . (isset($sql_prop) ? $sql_prop : (isset($sql_enchere) ? $sql_enchere : 'N/A')) . " Params: " . json_encode(isset($params_prop) ? $params_prop : (isset($params_enchere) ? $params_enchere : [])));
         }
     }
 }
 
-// Handle Delete Property GET request
 if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id'])) {
     $delete_id = (int)$_GET['id'];
-    // TODO: Add CSRF token validation
     try {
-        // Optional: Select filename to delete image file
-        // $stmt_get_photo = $pdo->prepare("SELECT photo_principale_filename FROM Proprietes WHERE id = :id");
-        // $stmt_get_photo->execute([':id' => $delete_id]);
-        // $photo_to_delete = $stmt_get_photo->fetchColumn();
-
+        
         $sql_delete = "DELETE FROM Proprietes WHERE id = :id";
         $stmt_delete = $pdo->prepare($sql_delete);
         $stmt_delete->execute([':id' => $delete_id]);
 
-        // if ($photo_to_delete && file_exists("../assets/properties/" . $photo_to_delete)) {
-        //     unlink("../assets/properties/" . $photo_to_delete);
-        // }
-        $_SESSION['success_message_redirect'] = "Propriété supprimée avec succès !"; // Use session for message after redirect
+        $_SESSION['success_message_redirect'] = "Propriété supprimée avec succès !";
     } catch (PDOException $e) {
         $_SESSION['error_message_redirect'] = "Erreur lors de la suppression : " . $e->getMessage();
         error_log("PDO Error deleting property: " . $e->getMessage());
     }
-    header("Location: manage_properties.php"); // Redirect to clear GET params & show message
+    header("Location: manage_properties.php");
     exit;
 }
-// Display redirected messages
 if (isset($_SESSION['success_message_redirect'])) {
     $success_message = $_SESSION['success_message_redirect'];
     unset($_SESSION['success_message_redirect']);
@@ -286,9 +249,7 @@ if (isset($_SESSION['error_message_redirect'])) {
     unset($_SESSION['error_message_redirect']);
 }
 
-
-// Handle Edit Property GET request (to populate form)
-if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['id']) && !$edit_mode && $_SERVER["REQUEST_METHOD"] != "POST") { // $edit_mode check and not POST prevents re-fetch on POST failure
+if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['id']) && !$edit_mode && $_SERVER["REQUEST_METHOD"] != "POST") {
     $current_edit_id = (int)$_GET['id'];
     try {
         $sql_edit = "SELECT p.*, 
@@ -303,17 +264,15 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['id']) &&
         $property_to_edit = $stmt_edit->fetch();
 
         if ($property_to_edit) {
-            $form_data = $property_to_edit; // Populate form data with fetched property
+            $form_data = $property_to_edit;
             $edit_mode = true;
-            $edit_property_id = $current_edit_id; // Set this for the form's hidden field
-            // Ensure numeric values from DB are correctly typed for the form if necessary (though htmlspecialchars handles output)
-            // And ensure checkbox values are 0 or 1
+            $edit_property_id = $current_edit_id;
             $form_data['balcon'] = (int)($form_data['balcon'] ?? 0);
             $form_data['parking'] = (int)($form_data['parking'] ?? 0);
 
         } else {
             $error_message = "Propriété non trouvée pour l'édition.";
-            $edit_mode = false; // Ensure edit mode is off if property not found
+            $edit_mode = false;
         }
     } catch (PDOException $e) {
         $error_message = "Erreur lors de la récupération de la propriété pour édition: " . $e->getMessage();
@@ -322,8 +281,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['id']) &&
     }
 }
 
-
-// Fetch all properties to display in the list
 try {
     $sql_properties = "SELECT p.*, CONCAT(u.prenom, ' ', u.nom) as agent_name 
                        FROM Proprietes p 
@@ -354,7 +311,6 @@ try {
         </div>
     <?php endif; ?>
 
-    <!-- Add/Edit Property Form -->
     <div class="card shadow-sm mb-5">
         <div class="card-header">
             <h4 class="mb-0"><?php echo $edit_mode ? 'Modifier la Propriété (ID: ' . htmlspecialchars($edit_property_id) . ')' : 'Ajouter une Nouvelle Propriété'; ?></h4>
@@ -449,7 +405,6 @@ try {
                     </div>
                 </div>
 
-                <!-- Auction Specific Fields - Hidden by default -->
                 <div id="auction_fields_container" class="row mt-3 border-top pt-3" style="display: none;">
                     <h5 class="mb-3 text-primary">Détails de l'Enchère (si statut 'Enchère Active')</h5>
                     <div class="col-md-4 mb-3">
@@ -465,7 +420,6 @@ try {
                         <input type="datetime-local" class="form-control" id="date_heure_fin_enchere" name="date_heure_fin_enchere" value="<?php echo htmlspecialchars(!empty($form_data['date_heure_fin_enchere']) ? date('Y-m-d\TH:i', strtotime($form_data['date_heure_fin_enchere'])) : ''); ?>">
                     </div>
                 </div>
-                <!-- End Auction Specific Fields -->
 
                 <div class="row align-items-center">
                     <div class="col-md-6 mb-3">
@@ -475,7 +429,6 @@ try {
                             <small class="form-text text-muted">Actuelle: <?php echo htmlspecialchars($form_data['photo_principale_filename']); ?> 
                             <img src="<?php echo $path_prefix . 'assets/properties/' . htmlspecialchars($form_data['photo_principale_filename']); ?>" alt="Photo actuelle" style="max-height: 50px; margin-left: 10px; border-radius: 4px;">
                             </small>
-                            <!-- existing_photo_filename is now a hidden field at the top of the form -->
                         <?php endif; ?>
                     </div>
                     <div class="col-md-6 mb-3">
@@ -504,7 +457,6 @@ try {
         </div>
     </div>
 
-    <!-- List of Properties -->
     <h3 class="mb-3">Liste des Propriétés Existantes</h3>
     <div class="card shadow-sm">
         <div class="card-body">
@@ -544,7 +496,7 @@ try {
                                     <td><?php echo htmlspecialchars($property['agent_name'] ?? 'Non assigné'); ?></td>
                                     <td>
                                         <?php 
-                                            $status_class = 'secondary'; // Default badge
+                                            $status_class = 'secondary';
                                             if (isset($property_status_options[$property['statut']])) {
                                                 switch ($property['statut']) {
                                                     case 'disponible': $status_class = 'success'; break;
@@ -579,7 +531,7 @@ function toggleAuctionFields() {
     var dateFinInput = document.getElementById('date_heure_fin_enchere');
 
     if (statutSelect.value === 'enchere_active') {
-        auctionFieldsContainer.style.display = 'flex'; // 'flex' to maintain row layout, or 'block'
+        auctionFieldsContainer.style.display = 'flex';
         prixDepartInput.required = true;
         dateDebutInput.required = true;
         dateFinInput.required = true;
@@ -588,14 +540,9 @@ function toggleAuctionFields() {
         prixDepartInput.required = false;
         dateDebutInput.required = false;
         dateFinInput.required = false;
-        // Optionally clear the values if hiding
-        // prixDepartInput.value = '';
-        // dateDebutInput.value = '';
-        // dateFinInput.value = '';
     }
 }
 
-// Call on page load to set initial state, especially for edit mode
 document.addEventListener('DOMContentLoaded', function() {
     toggleAuctionFields();
 });
