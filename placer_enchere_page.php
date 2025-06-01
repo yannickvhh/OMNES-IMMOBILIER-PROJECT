@@ -1,7 +1,7 @@
 <?php
-$path_prefix = ''; // This file is at the root
+$path_prefix = '';
 $page_title = "Placer une Enchère";
-require_once 'php/config/db.php'; // Provides $pdo
+require_once 'php/config/db.php';
 require_once 'php/includes/header.php';
 
 $propriete_id = null;
@@ -14,7 +14,7 @@ $enchere_active = false;
 $error_message = '';
 $success_message = '';
 
-if(isset($_SESSION['success_message_prop'])) { // Reuse session messages from placer_offre_action
+if(isset($_SESSION['success_message_prop'])) {
     $success_message = $_SESSION['success_message_prop'];
     unset($_SESSION['success_message_prop']);
 }
@@ -33,7 +33,6 @@ if (!$pdo) {
         $enchere_id = (int)$_GET['enchere_id'];
 
         try {
-            // 1. Récupérer les détails de la propriété
             $sql_propriete = "SELECT id, titre, photo_principale_filename, id_agent_responsable FROM Proprietes WHERE id = :id_propriete";
             $stmt_prop = $pdo->prepare($sql_propriete);
             $stmt_prop->execute([':id_propriete' => $propriete_id]);
@@ -43,7 +42,6 @@ if (!$pdo) {
                 throw new Exception("Propriété non trouvée.");
             }
 
-            // 2. Récupérer les détails de l'enchère
             $sql_enchere = "SELECT e.id, e.id_propriete, e.date_heure_debut, e.date_heure_fin, e.prix_depart, 
                                 COALESCE(MAX(oe.montant_offre), e.prix_depart) as prix_actuel 
                             FROM Encheres e 
