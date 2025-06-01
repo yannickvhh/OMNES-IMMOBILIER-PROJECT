@@ -1,70 +1,57 @@
 <?php
-session_start();
 require_once '../config/db.php';
+session_start();
 
-$email = $password = "";
-$errors = [];
+header('Content-Type: application/json');
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if (!isset($pdo)) {
+    echo json_encode(['success' => false, 'message' => 'Erreur critique: La connexion à la base de données n\'a pas pu être établie.']);
+    exit;
+}
 
-    if (empty(trim($_POST["email"]))) {
-        $errors['email'] = "Veuillez entrer votre email.";
-    } else {
-        $email = trim($_POST["email"]);
-    }
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    echo json_encode(['success' => false, 'message' => 'Authentification requise.']);
+    exit;
+}
 
-    if (empty(trim($_POST["password"]))) {
-        $errors['password'] = "Veuillez entrer votre mot de passe.";
-    } else {
-        $password = trim($_POST["password"]);
-    }
+$current_user_id = $_SESSION['user_id'];
+$contact_id = filter_input(INPUT_GET, 'contact_id', FILTER_VALIDATE_INT);
 
-    if (empty($errors)) {
-        if (!$pdo) {
-            $errors['database'] = "Erreur critique: La connexion à la base de données n\\\'a pas pu être établie.";
-        } else {
-            $sql = "SELECT id, nom, prenom, email, mot_de_passe, type_compte FROM Utilisateurs WHERE email = :email";
+if (!$contact_id) {
+    echo json_encode(['success' => false, 'message' => 'ID de contact manquant ou invalide.']);
+    exit;
+}
 
-            try {
-                $stmt = $pdo->prepare($sql);
-                $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+$messages = [];
 
-                if ($stmt->execute()) {
-                    if ($stmt->rowCount() == 1) {
-                        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-                        if (password_verify($password, $user['mot_de_passe'])) {
-                            session_regenerate_id();
-                            
-                            $_SESSION["loggedin"] = true;
-                            $_SESSION["user_id"] = $user['id'];
-                            $_SESSION["user_email"] = $user['email'];
-                            $_SESSION["user_nom"] = $user['nom'];
-                            $_SESSION["user_prenom"] = $user['prenom'];
-                            $_SESSION["user_type"] = $user['type_compte'];
+try {
+    $sql = "SELECT id, id_expediteur, id_destinataire, contenu_message, date_heure_envoi, lu
+            FROM Messages 
+            WHERE (id_expediteur = :current_user_id1 AND id_destinataire = :contact_id1) 
+               OR (id_expediteur = :contact_id2 AND id_destinataire = :current_user_id2) 
+            ORDER BY date_heure_envoi ASC";
 
-                            header("location: ../../index.php"); 
-                            exit();
-                        } else {
-                            $errors['login'] = "Email ou mot de passe incorrect.";
-                        }
-                    } else {
-                        $errors['login'] = "Email ou mot de passe incorrect.";
-                    }
-                } else {
-                    $errors['database'] = "Oops! Quelque chose s\\\'est mal passé lors de l\\\'exécution de la requête. Veuillez réessayer plus tard.";
-                }
-            } catch (PDOException $e) {
-                $errors['database'] = "Erreur de base de données: " . $e->getMessage();
-                error_log("PDO Login Error: " . $e->getMessage());
-            }
-        }
-    }
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([
+        ':current_user_id1' => $current_user_id,
+        ':contact_id1' => $contact_id,
+        ':contact_id2' => $contact_id,
+        ':current_user_id2' => $current_user_id
+    ]);
+    $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    if (!empty($errors)) {
-        $_SESSION['login_errors'] = $errors;
-        $_SESSION['login_input_email'] = $email;
-        header("location: ../../votre-compte.php#connexion");
-        exit();
-    }
+    $update_sql = "UPDATE Messages SET lu = TRUE WHERE id_expediteur = :contact_id AND id_destinataire = :current_user_id AND lu = FALSE";
+    $update_stmt = $pdo->prepare($update_sql);
+    $update_stmt->execute([
+        ':contact_id' => $contact_id,
+        ':current_user_id' => $current_user_id
+    ]);
+
+    echo json_encode($messages);
+
+} catch (PDOException $e) {
+    error_log("PDO Error in get_messages_action.php: " . $e->getMessage());
+    echo json_encode(['success' => false, 'message' => 'Erreur de base de données lors de la récupération des messages.']);
+    exit;
 }
 ?> 
