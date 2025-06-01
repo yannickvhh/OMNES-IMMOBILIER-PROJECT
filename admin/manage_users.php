@@ -1,24 +1,20 @@
 <?php
-$path_prefix = '../'; // Prefix for assets and nav links from admin folder
+$path_prefix = '../'; 
 $page_title = "Gérer les Utilisateurs | Admin OMNES IMMOBILIER";
 require_once '../php/includes/header.php';
-// Ensure db.php now provides a PDO connection object, typically named $pdo
 require_once '../php/config/db.php'; 
 
-// Security: Check if user is admin
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || $_SESSION["user_type"] !== 'admin') {
     header("location: " . $path_prefix . "votre-compte.php");
     exit;
 }
 
-// Initialize variables
 $users_list = [];
 $success_message = '';
 $error_message = '';
 
-$current_admin_id = $_SESSION['user_id'] ?? null; // Get current admin ID to prevent self-deletion/demotion
+$current_admin_id = $_SESSION['user_id'] ?? null; 
 
-// Handle Change User Type POST request
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_type'])) {
     $user_id_to_change = intval($_POST['user_id']);
     $new_type = $_POST['new_type'];
@@ -33,15 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_type'])) {
             $stmt_change->execute([':new_type' => $new_type, ':user_id' => $user_id_to_change]);
             
             if ($stmt_change->rowCount() > 0) {
-                // If changing FROM agent, consider if related data in AgentsImmobiliers needs cleanup.
-                // If changing TO agent, admin needs to complete profile in manage_agents.php.
-                // For now, we only update the type_compte.
                  if ($new_type !== 'agent' && $_POST['original_type'] === 'agent') {
-                    // If demoting an agent, you might want to remove their AgentsImmobiliers record.
-                    // This is a design decision. For now, it's left as is (orphaned or handled by other processes).
-                    // $sql_remove_agent_profile = "DELETE FROM AgentsImmobiliers WHERE id_utilisateur = :user_id";
-                    // $stmt_remove_agent = $pdo->prepare($sql_remove_agent_profile);
-                    // $stmt_remove_agent->execute([':user_id' => $user_id_to_change]);
                     $success_message = "Type de compte utilisateur mis à jour. L'ancien profil d'agent peut nécessiter une vérification manuelle.";
                 } elseif ($new_type === 'agent' && $_POST['original_type'] !== 'agent'){
                     $success_message = "Type de compte mis à jour vers Agent. Veuillez compléter le profil de l'agent dans la section 'Gérer les Agents' si ce n'est pas déjà fait.";
@@ -49,7 +37,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_type'])) {
                     $success_message = "Type de compte utilisateur mis à jour avec succès.";
                 }
             } else {
-                 // This can happen if the type is already the new_type, or user_id not found (less likely if UI is correct)
                 $error_message = "Aucune modification effectuée. Le type est peut-être déjà correct ou l'utilisateur est introuvable.";
             }
         } catch (PDOException $e) {
@@ -61,7 +48,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_type'])) {
     }
 }
 
-// Handle Delete User GET request
 if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id'])) {
     $delete_id = intval($_GET['id']);
 
@@ -71,7 +57,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
         try {
             $pdo->beginTransaction();
 
-            // Fetch user type and agent file names if user is an agent
             $stmt_get_user = $pdo->prepare("SELECT u.type_compte, ai.photo_filename, ai.cv_filename 
                                             FROM Utilisateurs u 
                                             LEFT JOIN AgentsImmobiliers ai ON u.id = ai.id_utilisateur 
@@ -81,20 +66,16 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
 
             if ($user_to_delete_data) {
                 if ($user_to_delete_data['type_compte'] === 'agent') {
-                    // Delete agent files from server
                     if (!empty($user_to_delete_data['photo_filename']) && file_exists("../assets/agents/photos/" . $user_to_delete_data['photo_filename'])) {
                         unlink("../assets/agents/photos/" . $user_to_delete_data['photo_filename']);
                     }
                     if (!empty($user_to_delete_data['cv_filename']) && file_exists("../assets/agents/cvs/" . $user_to_delete_data['cv_filename'])) {
                         unlink("../assets/agents/cvs/" . $user_to_delete_data['cv_filename']);
                     }
-                    // Explicitly delete from AgentsImmobiliers first if ON DELETE CASCADE is not guaranteed or for clarity
                     $stmt_delete_agent_profile = $pdo->prepare("DELETE FROM AgentsImmobiliers WHERE id_utilisateur = :id_utilisateur");
                     $stmt_delete_agent_profile->execute([':id_utilisateur' => $delete_id]);
                 }
 
-                // Now delete the user from Utilisateurs table
-                // ON DELETE CASCADE should handle related data in Clients, Messages, Paiements, Rdv, etc.
                 $sql_delete_user = "DELETE FROM Utilisateurs WHERE id = :id";
                 $stmt_delete_user = $pdo->prepare($sql_delete_user);
                 $stmt_delete_user->execute([':id' => $delete_id]);
@@ -120,7 +101,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
     exit;
 }
 
-// Display redirected messages
 if (isset($_SESSION['success_message_redirect'])) {
     $success_message = $_SESSION['success_message_redirect'];
     unset($_SESSION['success_message_redirect']);
@@ -130,8 +110,6 @@ if (isset($_SESSION['error_message_redirect'])) {
     unset($_SESSION['error_message_redirect']);
 }
 
-
-// Fetch all users to display in the list
 try {
     $sql_users_list = "SELECT u.id, u.nom, u.prenom, u.email, u.type_compte, u.date_creation 
                        FROM Utilisateurs u 
@@ -141,7 +119,7 @@ try {
 } catch (PDOException $e) {
     $error_message = "Erreur lors de la récupération de la liste des utilisateurs: " . $e->getMessage();
     error_log("PDO Error fetching users list: " . $e->getMessage());
-    $users_list = []; // Ensure it's an empty array on error
+    $users_list = []; 
 }
 
 $account_types_options = [
@@ -167,7 +145,6 @@ $account_types_options = [
         </div>
     <?php endif; ?>
 
-    <!-- List of Users -->
     <div class="card shadow-sm">
         <div class="card-header">
             <h4 class="mb-0">Liste des Utilisateurs Enregistrés</h4>
@@ -216,7 +193,7 @@ $account_types_options = [
                                         <?php if ($user_item['type_compte'] === 'agent'): ?>
                                             <a href="manage_agents.php?action=edit&id=<?php echo $user_item['id']; ?>" class="btn btn-sm btn-outline-secondary mb-1" title="Gérer profil agent"><i class="fas fa-user-tie"></i> Profil</a>
                                         <?php endif; ?>
-                                        <?php if ($user_item['id'] != $current_admin_id): // Prevent self-delete ?>
+                                        <?php if ($user_item['id'] != $current_admin_id): 
                                             <a href="manage_users.php?action=delete&id=<?php echo $user_item['id']; ?>" class="btn btn-sm btn-outline-danger mb-1" title="Supprimer Utilisateur" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur (ID: <?php echo $user_item['id']; ?>) ? Cette action est irréversible et supprimera toutes les données associées (profil, rdv, messages, etc.).');"><i class="fas fa-trash"></i></a>
                                         <?php else: ?>
                                             <button class="btn btn-sm btn-outline-danger mb-1" disabled title="Supprimer Utilisateur"><i class="fas fa-trash"></i></button>
