@@ -1,4 +1,3 @@
-    <!-- Footer -->
     <footer class="footer mt-auto py-3 bg-dark text-white">
         <div class="container">
             <div class="row">
@@ -25,7 +24,7 @@
                 </div>
             </div>
             
-            <div class="map-container my-3" style="height: 200px; /* Adjust height as needed */">
+            <div class="map-container my-3" style="height: 200px;">
                 <iframe src="https://www.google.com/maps?q=37+quai+de+Grenelle,+75015+Paris&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
             </div>
             
@@ -35,9 +34,7 @@
         </div>
     </footer>
 
-    <!-- Bootstrap JS Bundle (includes Popper) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Your custom JS -->
     <script src="<?php echo $path_prefix; ?>js/main.js"></script> 
 
 </body>
