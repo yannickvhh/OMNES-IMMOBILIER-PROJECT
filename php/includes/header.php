@@ -2,14 +2,11 @@
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
-// Determine the current page to set the active class in navigation
+
 $current_page = basename($_SERVER['PHP_SELF']);
 
-// Path prefix for assets - to be defined in each including page
-// Default to empty if not set, for pages in the root directory.
 $path_prefix = isset($path_prefix) ? $path_prefix : '';
 
-// Check if the user is logged in and what type of user they are
 $is_logged_in = isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true;
 $user_type = $is_logged_in ? $_SESSION["user_type"] : null;
 $user_name = $is_logged_in ? htmlspecialchars($_SESSION["user_prenom"]) . ' ' . htmlspecialchars($_SESSION["user_nom"]) : null;
@@ -17,7 +14,7 @@ $user_id = $is_logged_in ? $_SESSION["user_id"] : null;
 
 $total_unread_messages = 0;
 if ($is_logged_in && isset($mysqli) && $mysqli && isset($user_id)) {
-    // $mysqli is assumed to be globally available from the script that included this header.
+    
     $sql_unread_count = "SELECT COUNT(*) as unread_total FROM Messages WHERE id_destinataire = ? AND lu = FALSE";
     if ($stmt_unread = $mysqli->prepare($sql_unread_count)) {
         $stmt_unread->bind_param("i", $user_id);
@@ -37,22 +34,22 @@ if ($is_logged_in && isset($mysqli) && $mysqli && isset($user_id)) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- The title will be set by each individual page -->
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
-    <!-- Bootstrap CSS -->
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     
-    <!-- Your custom CSS (should come after Bootstrap to override styles) -->
+    
     <link rel="stylesheet" href="<?php echo $path_prefix; ?>php/includes/style.css">
 
     <title><?php echo isset($page_title) ? htmlspecialchars($page_title) : 'OMNES IMMOBILIER'; ?></title>
 </head>
 <body>
-    <!-- Header -->
+    
     <header class="header">
         <div class="container header-content">
             <div class="logo-container">
@@ -68,7 +65,7 @@ if ($is_logged_in && isset($mysqli) && $mysqli && isset($user_id)) {
         </div>
     </header>
 
-    <!-- Navigation -->
+    
     <nav class="navbar navbar-expand-lg bg-light sticky-top shadow-sm">
         <div class="container">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -110,7 +107,7 @@ if ($is_logged_in && isset($mysqli) && $mysqli && isset($user_id)) {
                                 <li><a class="dropdown-item" href="<?php echo $path_prefix; ?>admin/manage_properties.php">Gérer Propriétés</a></li>
                                 <li><a class="dropdown-item" href="<?php echo $path_prefix; ?>admin/manage_agents.php">Gérer Agents</a></li>
                                 <li><a class="dropdown-item" href="<?php echo $path_prefix; ?>admin/manage_users.php">Gérer Utilisateurs</a></li>
-                                <!-- Add more admin links as needed -->
+                                
                             </ul>
                         </li>
                     <?php endif; ?>
@@ -118,14 +115,14 @@ if ($is_logged_in && isset($mysqli) && $mysqli && isset($user_id)) {
                          <li class="nav-item">
                             <a class="nav-link <?php echo (strpos($current_page, 'agent_dashboard.php') !== false) ? 'active' : ''; ?>" href="<?php echo $path_prefix; ?>agent/agent_dashboard.php">Tableau de Bord Agent</a>
                         </li>
-                        <!-- Add more agent-specific links here -->
+                        
                     <?php endif; ?>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Main content will go here -->
+    
 
 </body>
 </html> 
