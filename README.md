@@ -76,6 +76,7 @@ Ce projet est développé dans le cadre d'un projet académique pour l'ECE Paris
 
 ## Contact
 Pour toute question ou suggestion concernant ce projet, veuillez contacter :
-- Email : [leflutistedu78.lckl@gmail.com]
+- Email Silouane Chouteau : [leflutistedu78.lckl@gmail.com]
+- Email Yannick Van Heerden : yannick@van-heerden.com
 
 
